@@ -7,7 +7,7 @@ def calculate_adjusted_cal_plan(tdee):
     return tdee_matrix
 
 def calculate_macros(kcal,lean_body_mass):
-    protein_nutrients = lean_body_mass * 2.8 #protein in grams
+    protein_nutrients = lean_body_mass * 2.2 #protein in grams
     protein_calories = protein_nutrients * 4 # protein in kcal
     carb_calories = kcal * 0.5 #carbs in kcal
     carb_nutrients = carb_calories / 4 #carbs in grams
