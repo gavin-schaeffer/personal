@@ -1,0 +1,800 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The Program to Get Jacked</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Roboto Slab', serif;
+            margin: 20px;
+            line-height: 1.8;
+            font-size: 16px;
+            color: #2B2118;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            text-align: center;
+            color: #3B3A30;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        .section-header {
+            background-color: #D5BA96;
+            padding: 12px;
+            font-family: 'Oswald', sans-serif;
+            text-align: center;
+            font-size: 20px;
+            color: white;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        /* Base table styles (used for nutrition + progress tables) */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            background: white;
+        }
+
+        th {
+            background-color: #3E4E2F;
+            color: white;
+            font-size: 16px;
+            font-family: 'Oswald', sans-serif;
+            font-weight: bold;
+            padding: 12px;
+        }
+
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+            font-family: 'Roboto Slab', serif;
+            font-size: 15px;
+            background: white; /* ensures no row striping */
+        }
+
+        /* Week block styling (thick border around the colored week background) */
+        .week-section {
+            padding: 14px;
+            margin: 0; /* contained inside details */
+            border-radius: 10px;
+            border: 8px solid var(--week-border);
+            background-color: var(--week-bg);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+        }
+
+        .week-title {
+            color: white;
+            margin: 0 0 14px 0;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+        }
+
+        /* Individual Day card (thick border around each day) */
+        .day-card {
+            background: rgba(255, 255, 255, 0.82);
+            border-radius: 10px;
+            border: 6px solid #3B3A30;
+            margin: 14px 0;
+            overflow: hidden; /* keeps the header/table corners clean */
+        }
+
+        .day-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            padding: 10px 12px;
+            background: #3B3A30;
+            color: white;
+            text-align: left;
+            letter-spacing: 0.5px;
+        }
+
+        /* Day table: no shadow here, since the card already has it */
+        .day-card table {
+            box-shadow: none;
+            margin: 0;
+            border-collapse: collapse;
+            width: 100%;
+            background: white;
+        }
+
+        /* Optional: make the column header row in each Day table slightly different */
+        .day-card th {
+            background-color: #3E4E2F;
+        }
+
+        /* ---------- Collapsible Enhancements (no symbols, centered main headers) ---------- */
+        details {
+        border-radius: 10px;
+        margin: 12px 0 18px;
+        background: #fff;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.10);
+        overflow: hidden;
+        }
+
+        /* Hide browser's default disclosure triangle so there are NO symbols */
+        summary::-webkit-details-marker { display: none; }
+        summary { user-select: none; }
+
+        /* Main section headers (centered) */
+        .summary-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;    /* center the header text */
+        text-align: center;         /* center text within */
+        list-style: none;
+        cursor: pointer;
+        padding: 12px 14px;
+        margin: 0;
+        background-color: #D5BA96;
+        color: #fff;
+        font-family: 'Oswald', sans-serif;
+        font-size: 20px;
+        text-transform: uppercase;
+        border: none;
+        }
+
+        /* Week summary line (no symbols; still left-aligned by default) */
+        .week-summary {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 10px 12px;
+        font-family: 'Oswald', sans-serif;
+        font-size: 18px;
+        color: #fff;
+        text-transform: uppercase;
+        border: none;
+        list-style: none;
+        }
+
+        /* Body wrapper inside collapsibles */
+        .collapse-body { padding: 12px 12px 16px 12px; }
+    </style>
+</head>
+<body>
+    <h1>The "Getting Jacked" Program</h1>
+
+    <div style="display:flex; gap:10px; justify-content:center; margin: 8px 0 16px;">
+        <button id="expandAllBtn" type="button">Expand all</button>
+        <button id="collapseAllBtn" type="button">Collapse all</button>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const expandAllBtn = document.getElementById('expandAllBtn');
+        const collapseAllBtn = document.getElementById('collapseAllBtn');
+        expandAllBtn.addEventListener('click', () => {
+            document.querySelectorAll('details').forEach(d => d.open = true);
+        });
+        collapseAllBtn.addEventListener('click', () => {
+            document.querySelectorAll('details').forEach(d => d.open = false);
+        });
+    });
+    </script>
+
+<section id="lifting-program">
+  <details open class="collapsible">
+    <summary class="summary-header">Lifting Program</summary>
+    <div class="collapse-body">
+
+      <details class="week-collapsible" open>
+        <summary class="week-summary" style="background-color:#99856C;">
+          Week 1: 02-16-26 to 02-22-26
+        </summary>
+
+        <div class="week-section" style="--week-bg: #D5BA96; --week-border: #99856C; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+
+          <div class="day-card">
+            <div class="day-title">Day 1: Monday, 02-16-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Barbell Flat Bench</td><td>200.0</td><td>4</td><td>10</td></tr><tr><td>Barbell Incline Bench</td><td>150.0</td><td>3</td><td>12</td></tr><tr><td>Barbell Close-Grip Bench</td><td>85.0</td><td>3</td><td>12</td></tr><tr><td>Skull Crushers</td><td>60.0</td><td>3</td><td>12</td></tr><tr><td>Delt Raises</td><td>25.0</td><td>3</td><td>12</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 2: Tuesday, 02-17-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Back Squat</td><td>205.0</td><td>4</td><td>10</td></tr><tr><td>Bulgarian Split Squat</td><td>75.0</td><td>3</td><td>8</td></tr><tr><td>Leg Extension</td><td>25.0</td><td>3</td><td>12</td></tr><tr><td>Calf Raises</td><td>45.0</td><td>3</td><td>12</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 3: Wednesday, 02-18-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Chest Supported Row</td><td>250.0</td><td>4</td><td>10</td></tr><tr><td>Lat Pulldown</td><td>135.0</td><td>3</td><td>12</td></tr><tr><td>Rear Delt Fly</td><td>20.0</td><td>3</td><td>12</td></tr><tr><td>Barbell Curl</td><td>40.0</td><td>3</td><td>12</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 4: Thursday, 02-19-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Conventional Deadlift</td><td>245.0</td><td>4</td><td>10</td></tr><tr><td>Bulgarian Split Squat</td><td>75.0</td><td>3</td><td>8</td></tr><tr><td>Barbell RDL</td><td>170.0</td><td>3</td><td>8</td></tr><tr><td>Leg Curl</td><td>25.0</td><td>3</td><td>12</td></tr><tr><td>Calf Raises</td><td>45.0</td><td>3</td><td>12</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 5: Friday, 02-20-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Barbell Incline Bench</td><td>175.0</td><td>4</td><td>10</td></tr><tr><td>Barbell Close-Grip Bench</td><td>85.0</td><td>3</td><td>12</td></tr><tr><td>Lat Pulldown</td><td>160.0</td><td>4</td><td>10</td></tr><tr><td>Barbell Curl</td><td>40.0</td><td>3</td><td>12</td></tr><tr><td>Delt Raises</td><td>25.0</td><td>3</td><td>12</td></tr>
+            </table>
+          </div>
+
+        </div>
+      </details>
+
+      <details class="week-collapsible">
+        <summary class="week-summary" style="background-color:#9C9783;">
+          Week 2: 02-23-26 to 03-01-26
+        </summary>
+
+        <div class="week-section" style="--week-bg: #D9D2B6; --week-border: #9C9783; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+
+          <div class="day-card">
+            <div class="day-title">Day 1: Monday, 02-23-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Barbell Flat Bench</td><td>220.0</td><td>4</td><td>8</td></tr><tr><td>Barbell Incline Bench</td><td>150.0</td><td>3</td><td>12</td></tr><tr><td>Barbell Close-Grip Bench</td><td>85.0</td><td>3</td><td>12</td></tr><tr><td>Skull Crushers</td><td>60.0</td><td>3</td><td>12</td></tr><tr><td>Delt Raises</td><td>25.0</td><td>3</td><td>12</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 2: Tuesday, 02-24-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Back Squat</td><td>225.0</td><td>4</td><td>8</td></tr><tr><td>Bulgarian Split Squat</td><td>75.0</td><td>3</td><td>8</td></tr><tr><td>Leg Extension</td><td>25.0</td><td>3</td><td>12</td></tr><tr><td>Calf Raises</td><td>45.0</td><td>3</td><td>12</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 3: Wednesday, 02-25-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Chest Supported Row</td><td>270.0</td><td>4</td><td>8</td></tr><tr><td>Lat Pulldown</td><td>135.0</td><td>3</td><td>12</td></tr><tr><td>Rear Delt Fly</td><td>20.0</td><td>3</td><td>12</td></tr><tr><td>Barbell Curl</td><td>40.0</td><td>3</td><td>12</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 4: Thursday, 02-26-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Conventional Deadlift</td><td>265.0</td><td>4</td><td>8</td></tr><tr><td>Bulgarian Split Squat</td><td>75.0</td><td>3</td><td>8</td></tr><tr><td>Barbell RDL</td><td>170.0</td><td>3</td><td>8</td></tr><tr><td>Leg Curl</td><td>25.0</td><td>3</td><td>12</td></tr><tr><td>Calf Raises</td><td>45.0</td><td>3</td><td>12</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 5: Friday, 02-27-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Barbell Incline Bench</td><td>190.0</td><td>4</td><td>8</td></tr><tr><td>Barbell Close-Grip Bench</td><td>85.0</td><td>3</td><td>12</td></tr><tr><td>Lat Pulldown</td><td>175.0</td><td>4</td><td>8</td></tr><tr><td>Barbell Curl</td><td>40.0</td><td>3</td><td>12</td></tr><tr><td>Delt Raises</td><td>25.0</td><td>3</td><td>12</td></tr>
+            </table>
+          </div>
+
+        </div>
+      </details>
+
+      <details class="week-collapsible">
+        <summary class="week-summary" style="background-color:#918164;">
+          Week 3: 03-02-26 to 03-08-26
+        </summary>
+
+        <div class="week-section" style="--week-bg: #CAB48B; --week-border: #918164; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+
+          <div class="day-card">
+            <div class="day-title">Day 1: Monday, 03-02-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Barbell Flat Bench</td><td>240.0</td><td>5</td><td>6</td></tr><tr><td>Barbell Incline Bench</td><td>160.0</td><td>3</td><td>10</td></tr><tr><td>Barbell Close-Grip Bench</td><td>90.0</td><td>3</td><td>10</td></tr><tr><td>Skull Crushers</td><td>65.0</td><td>3</td><td>10</td></tr><tr><td>Delt Raises</td><td>25.0</td><td>3</td><td>10</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 2: Tuesday, 03-03-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Back Squat</td><td>250.0</td><td>5</td><td>6</td></tr><tr><td>Bulgarian Split Squat</td><td>75.0</td><td>4</td><td>6</td></tr><tr><td>Leg Extension</td><td>30.0</td><td>3</td><td>10</td></tr><tr><td>Calf Raises</td><td>45.0</td><td>3</td><td>10</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 3: Wednesday, 03-04-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Chest Supported Row</td><td>300.0</td><td>5</td><td>6</td></tr><tr><td>Lat Pulldown</td><td>145.0</td><td>3</td><td>10</td></tr><tr><td>Rear Delt Fly</td><td>20.0</td><td>3</td><td>10</td></tr><tr><td>Barbell Curl</td><td>45.0</td><td>3</td><td>10</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 4: Thursday, 03-05-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Conventional Deadlift</td><td>295.0</td><td>5</td><td>6</td></tr><tr><td>Bulgarian Split Squat</td><td>75.0</td><td>4</td><td>6</td></tr><tr><td>Barbell RDL</td><td>180.0</td><td>4</td><td>6</td></tr><tr><td>Leg Curl</td><td>30.0</td><td>3</td><td>10</td></tr><tr><td>Calf Raises</td><td>45.0</td><td>3</td><td>10</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 5: Friday, 03-06-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Barbell Incline Bench</td><td>210.0</td><td>5</td><td>6</td></tr><tr><td>Barbell Close-Grip Bench</td><td>90.0</td><td>3</td><td>10</td></tr><tr><td>Lat Pulldown</td><td>195.0</td><td>5</td><td>6</td></tr><tr><td>Barbell Curl</td><td>45.0</td><td>3</td><td>10</td></tr><tr><td>Delt Raises</td><td>25.0</td><td>3</td><td>10</td></tr>
+            </table>
+          </div>
+
+        </div>
+      </details>
+
+      <details class="week-collapsible">
+        <summary class="week-summary" style="background-color:#786F59;">
+          Week 4: 03-09-26 to 03-15-26
+        </summary>
+
+        <div class="week-section" style="--week-bg: #A89B7C; --week-border: #786F59; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+
+          <div class="day-card">
+            <div class="day-title">Day 1: Monday, 03-09-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Barbell Flat Bench</td><td>250.0</td><td>5</td><td>5</td></tr><tr><td>Barbell Incline Bench</td><td>160.0</td><td>3</td><td>10</td></tr><tr><td>Barbell Close-Grip Bench</td><td>90.0</td><td>3</td><td>10</td></tr><tr><td>Skull Crushers</td><td>65.0</td><td>3</td><td>10</td></tr><tr><td>Delt Raises</td><td>25.0</td><td>3</td><td>10</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 2: Tuesday, 03-10-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Back Squat</td><td>260.0</td><td>5</td><td>5</td></tr><tr><td>Bulgarian Split Squat</td><td>80.0</td><td>4</td><td>5</td></tr><tr><td>Leg Extension</td><td>30.0</td><td>3</td><td>10</td></tr><tr><td>Calf Raises</td><td>45.0</td><td>3</td><td>10</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 3: Wednesday, 03-11-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Chest Supported Row</td><td>310.0</td><td>5</td><td>5</td></tr><tr><td>Lat Pulldown</td><td>145.0</td><td>3</td><td>10</td></tr><tr><td>Rear Delt Fly</td><td>20.0</td><td>3</td><td>10</td></tr><tr><td>Barbell Curl</td><td>45.0</td><td>3</td><td>10</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 4: Thursday, 03-12-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Conventional Deadlift</td><td>305.0</td><td>5</td><td>5</td></tr><tr><td>Bulgarian Split Squat</td><td>80.0</td><td>4</td><td>5</td></tr><tr><td>Barbell RDL</td><td>185.0</td><td>4</td><td>5</td></tr><tr><td>Leg Curl</td><td>30.0</td><td>3</td><td>10</td></tr><tr><td>Calf Raises</td><td>45.0</td><td>3</td><td>10</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 5: Friday, 03-13-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Barbell Incline Bench</td><td>215.0</td><td>5</td><td>5</td></tr><tr><td>Barbell Close-Grip Bench</td><td>90.0</td><td>3</td><td>10</td></tr><tr><td>Lat Pulldown</td><td>200.0</td><td>5</td><td>5</td></tr><tr><td>Barbell Curl</td><td>45.0</td><td>3</td><td>10</td></tr><tr><td>Delt Raises</td><td>25.0</td><td>3</td><td>10</td></tr>
+            </table>
+          </div>
+
+        </div>
+      </details>
+
+      <details class="week-collapsible">
+        <summary class="week-summary" style="background-color:#8A7E6B;">
+          Week 5: 03-16-26 to 03-22-26
+        </summary>
+
+        <div class="week-section" style="--week-bg: #C1B095; --week-border: #8A7E6B; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+
+          <div class="day-card">
+            <div class="day-title">Day 1: Monday, 03-16-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Barbell Flat Bench</td><td>255.0</td><td>5</td><td>4</td></tr><tr><td>Barbell Incline Bench</td><td>170.0</td><td>3</td><td>8</td></tr><tr><td>Barbell Close-Grip Bench</td><td>95.0</td><td>3</td><td>8</td></tr><tr><td>Skull Crushers</td><td>70.0</td><td>3</td><td>8</td></tr><tr><td>Delt Raises</td><td>25.0</td><td>3</td><td>8</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 2: Tuesday, 03-17-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Back Squat</td><td>265.0</td><td>5</td><td>4</td></tr><tr><td>Bulgarian Split Squat</td><td>80.0</td><td>4</td><td>4</td></tr><tr><td>Leg Extension</td><td>30.0</td><td>3</td><td>8</td></tr><tr><td>Calf Raises</td><td>50.0</td><td>3</td><td>8</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 3: Wednesday, 03-18-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Chest Supported Row</td><td>320.0</td><td>5</td><td>4</td></tr><tr><td>Lat Pulldown</td><td>155.0</td><td>3</td><td>8</td></tr><tr><td>Rear Delt Fly</td><td>25.0</td><td>3</td><td>8</td></tr><tr><td>Barbell Curl</td><td>45.0</td><td>3</td><td>8</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 4: Thursday, 03-19-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Conventional Deadlift</td><td>315.0</td><td>5</td><td>4</td></tr><tr><td>Bulgarian Split Squat</td><td>80.0</td><td>4</td><td>4</td></tr><tr><td>Barbell RDL</td><td>190.0</td><td>4</td><td>4</td></tr><tr><td>Leg Curl</td><td>30.0</td><td>3</td><td>8</td></tr><tr><td>Calf Raises</td><td>50.0</td><td>3</td><td>8</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 5: Friday, 03-20-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Barbell Incline Bench</td><td>220.0</td><td>5</td><td>4</td></tr><tr><td>Barbell Close-Grip Bench</td><td>95.0</td><td>3</td><td>8</td></tr><tr><td>Lat Pulldown</td><td>205.0</td><td>5</td><td>4</td></tr><tr><td>Barbell Curl</td><td>45.0</td><td>3</td><td>8</td></tr><tr><td>Delt Raises</td><td>25.0</td><td>3</td><td>8</td></tr>
+            </table>
+          </div>
+
+        </div>
+      </details>
+
+      <details class="week-collapsible">
+        <summary class="week-summary" style="background-color:#99856C;">
+          Week 6: 03-23-26 to 03-29-26
+        </summary>
+
+        <div class="week-section" style="--week-bg: #D5BA96; --week-border: #99856C; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+
+          <div class="day-card">
+            <div class="day-title">Day 1: Monday, 03-23-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Barbell Flat Bench</td><td>265.0</td><td>1</td><td>3</td></tr><tr><td>Barbell Incline Bench</td><td>170.0</td><td>3</td><td>8</td></tr><tr><td>Barbell Close-Grip Bench</td><td>95.0</td><td>3</td><td>8</td></tr><tr><td>Skull Crushers</td><td>70.0</td><td>3</td><td>8</td></tr><tr><td>Delt Raises</td><td>25.0</td><td>3</td><td>8</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 2: Tuesday, 03-24-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Back Squat</td><td>275.0</td><td>1</td><td>3</td></tr><tr><td>Bulgarian Split Squat</td><td>85.0</td><td>1</td><td>3</td></tr><tr><td>Leg Extension</td><td>30.0</td><td>3</td><td>8</td></tr><tr><td>Calf Raises</td><td>50.0</td><td>3</td><td>8</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 3: Wednesday, 03-25-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Chest Supported Row</td><td>330.0</td><td>1</td><td>3</td></tr><tr><td>Lat Pulldown</td><td>155.0</td><td>3</td><td>8</td></tr><tr><td>Rear Delt Fly</td><td>25.0</td><td>3</td><td>8</td></tr><tr><td>Barbell Curl</td><td>45.0</td><td>3</td><td>8</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 4: Thursday, 03-26-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Conventional Deadlift</td><td>325.0</td><td>1</td><td>3</td></tr><tr><td>Bulgarian Split Squat</td><td>85.0</td><td>1</td><td>3</td></tr><tr><td>Barbell RDL</td><td>195.0</td><td>1</td><td>3</td></tr><tr><td>Leg Curl</td><td>30.0</td><td>3</td><td>8</td></tr><tr><td>Calf Raises</td><td>50.0</td><td>3</td><td>8</td></tr>
+            </table>
+          </div>
+
+          <div class="day-card">
+            <div class="day-title">Day 5: Friday, 03-27-26</div>
+            <table>
+              <tr>
+                <th>Exercise</th>
+                <th>Weight (lbs)</th>
+                <th>Sets</th>
+                <th>Reps</th>
+              </tr>
+<tr><td>Barbell Incline Bench</td><td>230.0</td><td>1</td><td>3</td></tr><tr><td>Barbell Close-Grip Bench</td><td>95.0</td><td>3</td><td>8</td></tr><tr><td>Lat Pulldown</td><td>210.0</td><td>1</td><td>3</td></tr><tr><td>Barbell Curl</td><td>45.0</td><td>3</td><td>8</td></tr><tr><td>Delt Raises</td><td>25.0</td><td>3</td><td>8</td></tr>
+            </table>
+          </div>
+
+        </div>
+      </details>
+
+    </div>
+  </details>
+</section>
+
+<section id="user-lift-inputs">
+  <details class="collapsible">
+    <summary class="summary-header">Your Lift Inputs (Editable)</summary>
+    <div class="collapse-body">
+      <div class="day-card">
+        <div class="day-title">Paste / Edit / Save Your Inputs</div>
+        <div style="padding:12px;">
+          <textarea id="liftInputBox" style="width:100%;height:260px;font-family:monospace;font-size:14px;white-space:pre;">
+    Push Maxes:
+    -----------------------------
+    Barbell Flat Bench: 
+    Barbell Incline Bench: 
+    Barbell Close-Grip Bench: 
+    
+
+    Pull Maxes:
+    ------------------------------
+    Conventional Deadlift: 
+    Chest Supported Row:
+    Lat Pull down: 
+    
+
+    Leg Maxes:
+    ------------------------------
+    Barbell Back Squat: 
+    Barbell RDL: 
+    Dumbbell Split Squat: 
+</textarea>
+
+          <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button onclick="saveInputs()">Save to file</button>
+            <button onclick="copyInputs()">Copy to clipboard</button>
+            <button onclick="saveLocal()">Save to browser</button>
+            <button onclick="loadLocal()">Load from browser</button>
+            <button onclick="resetDefaults()">Reset to defaults</button>
+          </div>
+
+          <p style="font-size:12px;color:#555;margin-top:8px;">
+            • “Save to file” downloads a .txt you can store alongside this program.
+            • “Save/Load to browser” persists only in this browser (localStorage).
+          </p>
+        </div>
+      </div>
+
+      <script>
+        const defaultText = `
+    Push Maxes:
+    -----------------------------
+    Barbell Flat Bench: 
+    Barbell Incline Bench: 
+    Barbell Close-Grip Bench: 
+    
+
+    Pull Maxes:
+    ------------------------------
+    Conventional Deadlift: 
+    Chest Supported Row:
+    Lat Pull down: 
+    
+
+    Leg Maxes:
+    ------------------------------
+    Barbell Back Squat: 
+    Barbell RDL: 
+    Dumbbell Split Squat: 
+`;
+
+        document.addEventListener('DOMContentLoaded', () => {
+          const box = document.getElementById('liftInputBox');
+          const saved = localStorage.getItem('liftInputs');
+          if (saved && saved.trim().length > 0) {
+            box.value = saved;
+          }
+        });
+
+        function copyInputs() {
+          const box = document.getElementById('liftInputBox');
+          box.select();
+          document.execCommand('copy');
+          alert('Inputs copied to clipboard');
+        }
+
+        function saveLocal() {
+          const box = document.getElementById('liftInputBox');
+          localStorage.setItem('liftInputs', box.value);
+          alert('Saved to this browser.');
+        }
+
+        function loadLocal() {
+          const saved = localStorage.getItem('liftInputs');
+          if (saved) {
+            document.getElementById('liftInputBox').value = saved;
+          } else {
+            alert('No browser-saved inputs found.');
+          }
+        }
+
+        function resetDefaults() {
+          document.getElementById('liftInputBox').value = defaultText;
+        }
+
+        function saveInputs() {
+          const box = document.getElementById('liftInputBox');
+          const blob = new Blob([box.value], { type: 'text/plain' });
+          const a = document.createElement('a');
+          const now = new Date();
+          const y = now.getFullYear();
+          const m = String(now.getMonth()+1).padStart(2,'0');
+          const d = String(now.getDate()).padStart(2,'0');
+          a.href = URL.createObjectURL(blob);
+          a.download = `lift_inputs_${y}-${m}-${d}.txt`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(a.href);
+        }
+      </script>
+    </div>
+  </details>
+</section>
+
+<section id="progress-report">
+  <details class="collapsible">
+    <summary class="summary-header">Progress Report</summary>
+    <div class="collapse-body">
+      <table>
+        <tr>
+            <th>Exercise</th>
+            <th>1 Rep Max (lbs)</th>
+        </tr>
+<tr><td>Barbell Flat Bench</td><td>295</td></tr><tr><td>Barbell Incline Bench</td><td>255</td></tr><tr><td>Barbell Close-Grip Bench</td><td>145</td></tr><tr><td>Skull Crushers</td><td>105</td></tr><tr><td>Delt Raises</td><td>40</td></tr><tr><td>Back Squat</td><td>305</td></tr><tr><td>Bulgarian Split Squat</td><td>110</td></tr><tr><td>Leg Extension</td><td>45</td></tr><tr><td>Calf Raises</td><td>75</td></tr><tr><td>Chest Supported Row</td><td>365</td></tr><tr><td>Lat Pulldown</td><td>235</td></tr><tr><td>Rear Delt Fly</td><td>35</td></tr><tr><td>Barbell Curl</td><td>70</td></tr><tr><td>Conventional Deadlift</td><td>360</td></tr><tr><td>Bulgarian Split Squat</td><td>110</td></tr><tr><td>Barbell RDL</td><td>255</td></tr><tr><td>Leg Curl</td><td>45</td></tr><tr><td>Calf Raises</td><td>75</td></tr><tr><td>Barbell Incline Bench</td><td>255</td></tr><tr><td>Barbell Close-Grip Bench</td><td>145</td></tr><tr><td>Lat Pulldown</td><td>235</td></tr><tr><td>Barbell Curl</td><td>70</td></tr><tr><td>Delt Raises</td><td>40</td></tr>
+      </table>
+    </div>
+  </details>
+</section>
+
+<section id="nutrition-goals">
+  <details class="collapsible">
+    <summary class="summary-header">Nutrition Goals</summary>
+    <div class="collapse-body">
+      <table>
+        <tr>
+<th>Goal Type</th><th>Kcal</th><th>Protein (g)</th><th>Carbs (g)</th><th>Fat (g)</th></tr><tr><td>Lose Agressive</td><td>1920.0</td><td>202.0</td><td>240.0</td><td>17.0</td></tr><tr><td>Lose Moderate</td><td>2153.0</td><td>202.0</td><td>269.0</td><td>30.0</td></tr><tr><td>Maintain</td><td>2461</td><td>202.0</td><td>308.0</td><td>47.0</td></tr><tr><td>Gain Moderate</td><td>2633.0</td><td>202.0</td><td>329.0</td><td>57.0</td></tr><tr><td>Gain Agressive</td><td>2904.0</td><td>202.0</td><td>363.0</td><td>72.0</td></tr>
+      </table>
+    </div>
+  </details>
+</section>
+
+</body>
+</html>

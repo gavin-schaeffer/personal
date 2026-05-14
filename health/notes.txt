@@ -1,0 +1,32 @@
+    '''
+    #====== Gather General Information ================
+    name_input = str(input("Name: "))
+    gender = str(input("Gender (M or F or Oth): "))
+    age = int(input("Age: "))
+    weight_input = int(input("Weight (lb): "))
+    height_input = input("Height (ft,in): ")
+    body_fat_input = float(input("Approximate body fat percentage (just integers, no sign): "))
+    sleep_score_input = float(input("Approximate hours of Sleep per night? (ex. 7.5): "))
+    lifting_frequency_input = int(input("How many days a week do you lift weights? "))
+    training_age_input = int(input("How long have you been strength training in years? "))
+    cardio_frequency_input = int(input("How many days a week do you do cardio? "))
+    daily_step_activity_input = int(input("How many steps do you get approximately every day? "))
+    job_type_input = str(input("What type of Job do you have? Sedentary (desk job), Moderate(retail), Active (Contruction). "))
+    rank_input = input("Easy or Advanced (E or A): ").lower()
+    '''
+
+
+
+    name_input = "Gavin"
+    gender = "m"
+    age = 25
+    weight_input = 201
+    height_input = "6,0"
+    body_fat_input = 22.0
+    sleep_score_input = 7.5
+    lifting_frequency_input = 5
+    training_age_input = 8
+    cardio_frequency_input = 0
+    daily_step_activity_input = 4500
+    job_type_input = "sedentary"
+    rank_input = "a"
