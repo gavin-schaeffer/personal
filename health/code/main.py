@@ -1,10 +1,20 @@
 from typing import List, Dict, Any, Tuple, Set
 from pathlib import Path
+from itertools import product
 import os
 import json
 from datetime import datetime, timedelta
 
-from nutrition_calculation import bmr, lean_body_mass, tdee_calc, tdee_output, input_conversion, activity_factor
+import nutritional_facts
+
+from nutrition_calculation import (
+    bmr,
+    lean_body_mass,
+    tdee_calc,
+    tdee_output,
+    input_conversion,
+    activity_factor,
+)
 from weekly_program import user_program
 from exercises import EXERCISES
 from lifting_calculations.weight_lifting_program import evaluate_selected_program
@@ -27,19 +37,21 @@ def get_training_day_offsets(freq: int) -> List[int]:
         return [0, 2, 4]
     if freq == 2:
         return [1, 3]
+
     raise ValueError("lifting_frequency_input must be one of {2,3,4,5}")
 
 
 def infer_num_weeks(selected_program: List[List[Dict[str, Any]]]) -> int:
     """
     Finds the first exercise with 'weeks' and returns len(weeks).
-    Assumes you've already called attach_weekly_prescriptions(...)
+    Assumes you've already called attach_weekly_prescriptions(...).
     """
     for day in selected_program:
         for ex in day:
             weeks = ex.get("weeks")
             if weeks:
                 return len(weeks)
+
     raise RuntimeError("No 'weeks' found on any exercise. Did you call attach_weekly_prescriptions()?")
 
 
@@ -50,15 +62,20 @@ def build_maxes_list(selected_program: List[List[Dict[str, Any]]]) -> List[Tuple
     """
     seen: Set[str] = set()
     out: List[Tuple[str, int]] = []
+
     for day in selected_program:
         for ex in day:
             name = ex.get("name", ex.get("key", "<unknown>"))
+
             if name in seen:
                 continue
+
             one_rm = ex.get("one_rm")
+
             if isinstance(one_rm, (int, float)):
                 out.append((name, int(one_rm)))
                 seen.add(name)
+
     return out
 
 
@@ -69,18 +86,18 @@ def build_inputs_text_last_week(selected_program: List[List[Dict[str, Any]]]) ->
     - Each exercise on one line
     - Shows 1RM and the last week's target as:
       - Exercise | 1RM: X | try: Y reps @ Z lbs first
-
-    Assumes each exercise has a 'weeks' list attached.
     """
     lines: List[str] = []
 
     num_weeks = None
+
     for day in selected_program:
         for ex in day:
             weeks = ex.get("weeks")
             if weeks:
                 num_weeks = len(weeks)
                 break
+
         if num_weeks is not None:
             break
 
@@ -114,25 +131,31 @@ def build_inputs_text_last_week(selected_program: List[List[Dict[str, Any]]]) ->
 
     return "\n".join(lines)
 
+
 def _darken_hex(hex_color: str, factor: float = 0.75) -> str:
     """
-    Darken a hex color by multiplying RGB channels by factor (0..1).
-    factor=0.75 makes it 25% darker.
+    Darken a hex color by multiplying RGB channels by factor.
     """
     hex_color = hex_color.strip().lstrip("#")
+
     if len(hex_color) != 6:
-        return "#3B3A30"  # fallback
+        return "#3B3A30"
+
     r = int(hex_color[0:2], 16)
     g = int(hex_color[2:4], 16)
     b = int(hex_color[4:6], 16)
+
     r = max(0, min(255, int(r * factor)))
     g = max(0, min(255, int(g * factor)))
     b = max(0, min(255, int(b * factor)))
+
     return f"#{r:02X}{g:02X}{b:02X}"
 
 
 def html_escape(text: str) -> str:
-    """Minimal HTML escaping for injecting into textarea safely."""
+    """
+    Minimal HTML escaping for injecting into textarea safely.
+    """
     return (
         text.replace("&", "&amp;")
             .replace("<", "&lt;")
@@ -140,12 +163,412 @@ def html_escape(text: str) -> str:
     )
 
 
+MEAL_TEMPLATES = [
+    {
+        "name": "Chicken Rice Bowl",
+        "foods": [
+            "Chicken breast, boneless skinless, raw",
+            "White rice, dry",
+            "Black beans, cooked",
+            "Broccoli, raw",
+            "Olive oil",
+        ],
+        "gram_ranges": {
+            "Chicken breast, boneless skinless, raw": (100, 350),
+            "White rice, dry": (40, 175),
+            "Black beans, cooked": (0, 250),
+            "Broccoli, raw": (50, 300),
+            "Olive oil": (0, 35),
+        },
+    },
+    {
+        "name": "Turkey Oats Yogurt Meal",
+        "foods": [
+            "Extra lean ground turkey, 99%, raw",
+            "Oats, dry",
+            "Fage Total 0% Greek yogurt",
+            "Blueberries, raw",
+            "Chia seeds",
+        ],
+        "gram_ranges": {
+            "Extra lean ground turkey, 99%, raw": (100, 350),
+            "Oats, dry": (30, 150),
+            "Fage Total 0% Greek yogurt": (100, 350),
+            "Blueberries, raw": (0, 200),
+            "Chia seeds": (0, 40),
+        },
+    },
+    {
+        "name": "Beef Potato Plate",
+        "foods": [
+            "Ground beef, 96% lean, raw",
+            "White potato, raw",
+            "Green peas, raw",
+            "Avocado, raw",
+            "Olive oil",
+        ],
+        "gram_ranges": {
+            "Ground beef, 96% lean, raw": (100, 350),
+            "White potato, raw": (150, 600),
+            "Green peas, raw": (50, 250),
+            "Avocado, raw": (0, 150),
+            "Olive oil": (0, 25),
+        },
+    },
+    {
+        "name": "Pork Pasta Meal",
+        "foods": [
+            "Pork tenderloin, raw",
+            "Pasta, dry",
+            "Red sauce, no sugar added",
+            "Mushrooms, white, raw",
+            "Olive oil",
+        ],
+        "gram_ranges": {
+            "Pork tenderloin, raw": (100, 350),
+            "Pasta, dry": (40, 175),
+            "Red sauce, no sugar added": (100, 250),
+            "Mushrooms, white, raw": (50, 250),
+            "Olive oil": (0, 30),
+        },
+    },
+]
+
+
+def meal_score_by_priority(totals: Dict[str, float], targets: Dict[str, float]) -> float:
+    """
+    Lower score is better.
+
+    Priority order:
+    1. Protein
+    2. Fiber
+    3. Carbs
+    4. Calories
+    5. Fat
+    """
+    weights = {
+        "protein_g": 10,
+        "fiber_g": 8,
+        "carbs_g": 6,
+        "kcal": 4,
+        "fat_g": 2,
+    }
+
+    score = 0.0
+
+    for key, weight in weights.items():
+        score += abs(totals[key] - targets[key]) * weight
+
+    return score
+
+
+def build_meal_with_custom_ranges(
+    selected_food_descriptions: List[str],
+    targets: Dict[str, float],
+    gram_ranges: Dict[str, Tuple[int, int]],
+    step: int = 5,
+) -> Dict[str, Any]:
+    """
+    Builds a meal from selected foods using realistic gram ranges.
+    """
+    selected_foods = [
+        nutritional_facts.get_food_by_description(description)
+        for description in selected_food_descriptions
+    ]
+
+    all_gram_options = []
+
+    for food in selected_foods:
+        low, high = gram_ranges.get(food["description"], (0, 300))
+        all_gram_options.append(range(low, high + step, step))
+
+    best_meal = None
+    best_totals = None
+    best_difference = None
+    best_score = float("inf")
+
+    for gram_combo in product(*all_gram_options):
+        meal = []
+
+        for food, grams in zip(selected_foods, gram_combo):
+            if grams > 0:
+                meal.append(nutritional_facts.scale_food(food, grams))
+
+        totals = nutritional_facts.total_meal(meal)
+        score = meal_score_by_priority(totals, targets)
+
+        if score < best_score:
+            best_score = score
+            best_meal = meal
+            best_totals = totals
+            best_difference = nutritional_facts.macro_difference(totals, targets)
+
+    return {
+        "meal": best_meal,
+        "totals": best_totals,
+        "targets": targets,
+        "difference": best_difference,
+        "score": round(best_score, 1),
+    }
+
+
+def build_meal_portion_ideas(meal_targets: Dict[str, float]) -> List[Dict[str, Any]]:
+    """
+    Builds meal portion ideas from preset meal templates.
+    Best matching meals are returned first.
+    """
+    meal_ideas = []
+
+    for template in MEAL_TEMPLATES:
+        result = build_meal_with_custom_ranges(
+            selected_food_descriptions=template["foods"],
+            targets=meal_targets,
+            gram_ranges=template["gram_ranges"],
+            step=5,
+        )
+
+        meal_ideas.append({
+            "name": template["name"],
+            "result": result,
+        })
+
+    meal_ideas.sort(key=lambda item: item["result"]["score"])
+
+    return meal_ideas
+
+
+def build_meal_ideas_html(meal_ideas: List[Dict[str, Any]]) -> str:
+    """
+    Builds the HTML table for meal portion ideas.
+    """
+    html = """
+        <details class="week-collapsible" open>
+          <summary class="week-summary" style="background-color:#6B4F2A;">
+            Meal Portion Ideas
+          </summary>
+
+          <div class="week-section" style="--week-bg:#D5BA96; --week-border:#6B4F2A; background-color:var(--week-bg); border:8px solid var(--week-border);">
+"""
+
+    for idea in meal_ideas:
+        name = idea["name"]
+        result = idea["result"]
+        meal = result["meal"]
+        totals = result["totals"]
+        targets = result["targets"]
+        difference = result["difference"]
+
+        html += f"""
+            <div class="day-card">
+              <div class="day-title">{name}</div>
+
+              <table>
+                <tr>
+                  <th>Food</th>
+                  <th>Serving (g)</th>
+                  <th>Kcal</th>
+                  <th>Protein (g)</th>
+                  <th>Carbs (g)</th>
+                  <th>Fat (g)</th>
+                  <th>Fiber (g)</th>
+                </tr>
+"""
+
+        for item in meal:
+            html += f"""
+                <tr>
+                  <td>{item["description"]}</td>
+                  <td>{item["grams"]}</td>
+                  <td>{item["kcal"]}</td>
+                  <td>{item["protein_g"]}</td>
+                  <td>{item["carbs_g"]}</td>
+                  <td>{item["fat_g"]}</td>
+                  <td>{item["fiber_g"]}</td>
+                </tr>
+"""
+
+        html += f"""
+              </table>
+
+              <table>
+                <tr>
+                  <th></th>
+                  <th>Kcal</th>
+                  <th>Protein (g)</th>
+                  <th>Carbs (g)</th>
+                  <th>Fat (g)</th>
+                  <th>Fiber (g)</th>
+                </tr>
+                <tr>
+                  <td>Targets</td>
+                  <td>{round(targets["kcal"], 1)}</td>
+                  <td>{round(targets["protein_g"], 1)}</td>
+                  <td>{round(targets["carbs_g"], 1)}</td>
+                  <td>{round(targets["fat_g"], 1)}</td>
+                  <td>{round(targets["fiber_g"], 1)}</td>
+                </tr>
+                <tr>
+                  <td>Totals</td>
+                  <td>{round(totals["kcal"], 1)}</td>
+                  <td>{round(totals["protein_g"], 1)}</td>
+                  <td>{round(totals["carbs_g"], 1)}</td>
+                  <td>{round(totals["fat_g"], 1)}</td>
+                  <td>{round(totals["fiber_g"], 1)}</td>
+                </tr>
+                <tr>
+                  <td>Difference</td>
+                  <td>{round(difference["kcal"], 1)}</td>
+                  <td>{round(difference["protein_g"], 1)}</td>
+                  <td>{round(difference["carbs_g"], 1)}</td>
+                  <td>{round(difference["fat_g"], 1)}</td>
+                  <td>{round(difference["fiber_g"], 1)}</td>
+                </tr>
+              </table>
+            </div>
+"""
+
+    html += """
+          </div>
+        </details>
+"""
+
+    return html
+
+
+def build_nutrition_goals_html(
+    header,
+    goal_label_matrix,
+    kcal,
+    proteins,
+    carbs,
+    fat,
+    fiber,
+    meal_frequency: int,
+) -> str:
+    """
+    Builds the Nutrition Goals section with three subgroups:
+    - My Macros
+    - Meal Targets
+    - Meal Portion Ideas
+    """
+    _, meal_macro_plan = nutritional_facts.meal_table(
+        kcal,
+        proteins,
+        carbs,
+        fat,
+        fiber,
+        meal_frequency,
+    )
+
+    meal_kcal, meal_proteins, meal_carbs, meal_fat, meal_fiber = meal_macro_plan
+
+    meal_targets = {
+        "kcal": round(meal_kcal, 1),
+        "protein_g": round(meal_proteins, 1),
+        "carbs_g": round(meal_carbs, 1),
+        "fat_g": round(meal_fat, 1),
+        "fiber_g": round(meal_fiber, 1),
+    }
+
+    meal_ideas = build_meal_portion_ideas(meal_targets)
+
+    html = """
+  <section id="nutrition-goals">
+    <details class="collapsible">
+      <summary class="summary-header">Nutrition Goals</summary>
+      <div class="collapse-body">
+
+        <details class="week-collapsible" open>
+          <summary class="week-summary" style="background-color:#3B3A30;">
+            My Macros
+          </summary>
+
+          <div class="week-section" style="--week-bg:#D9D2B6; --week-border:#3B3A30; background-color:var(--week-bg); border:8px solid var(--week-border);">
+            <table>
+              <tr>
+"""
+
+    for col in header:
+        html += f"                <th>{col}</th>\n"
+
+    html += """
+              </tr>
+              <tr>
+"""
+
+    for cell in goal_label_matrix:
+        html += f"                <td>{cell}</td>\n"
+
+    html += """
+              </tr>
+            </table>
+
+            <table>
+              <tr>
+                <th>Calories</th>
+                <th>Protein</th>
+                <th>Carbs</th>
+                <th>Fat</th>
+                <th>Fiber</th>
+              </tr>
+              <tr>
+"""
+
+    for cell in [kcal, proteins, carbs, fat, fiber]:
+        if isinstance(cell, (int, float)):
+            html += f"                <td>{round(cell, 1)}</td>\n"
+        else:
+            html += f"                <td>{cell}</td>\n"
+
+    html += f"""
+              </tr>
+            </table>
+          </div>
+        </details>
+
+        <details class="week-collapsible" open>
+          <summary class="week-summary" style="background-color:#3E4E2F;">
+            Meal Targets
+          </summary>
+
+          <div class="week-section" style="--week-bg:#CAB48B; --week-border:#3E4E2F; background-color:var(--week-bg); border:8px solid var(--week-border);">
+            <table>
+              <tr>
+                <th>Meals Per Day</th>
+                <th>Calories Per Meal</th>
+                <th>Protein Per Meal</th>
+                <th>Carbs Per Meal</th>
+                <th>Fat Per Meal</th>
+                <th>Fiber Per Meal</th>
+              </tr>
+              <tr>
+                <td>{meal_frequency}</td>
+                <td>{round(meal_kcal, 1)}</td>
+                <td>{round(meal_proteins, 1)}</td>
+                <td>{round(meal_carbs, 1)}</td>
+                <td>{round(meal_fat, 1)}</td>
+                <td>{round(meal_fiber, 1)}</td>
+              </tr>
+            </table>
+          </div>
+        </details>
+"""
+
+    html += build_meal_ideas_html(meal_ideas)
+
+    html += """
+      </div>
+    </details>
+  </section>
+"""
+
+    return html
+
+
 def main():
-    # Current date and time
     now = datetime.now()
     today = now.date()
 
-    # Calculate the next Monday
     days_ahead = (0 - today.weekday() + 7) % 7
     next_monday = today + timedelta(days=days_ahead)
 
@@ -163,22 +586,58 @@ def main():
     daily_step_activity_input = int(input("How many steps do you get approximately every day? "))
     job_type_input = str(input("What type of Job do you have? Sedentary (desk job), Moderate(retail), Active (Contruction). "))
     rank_input = input("Easy, Advanced, or Injured (E, A, or I): ").lower()
-    
-    #================== Nutrition Info =========================
+    nutrition_goal = input("lose, gain, or maintain? (L, G, or M): ").lower()
+    nutrition_goal_level = input("Goal rank? Agressive, or Moderate (A or M): ").lower()
+    meal_frequency_input = int(input("How many meals per day do you want? "))
+
+    if meal_frequency_input <= 0:
+        raise ValueError("Meal frequency must be greater than 0.")
+
+    # ================== Nutrition Info =========================
     weight = input_conversion.weight_kg_conversions(weight_input)
     height = input_conversion.height_cm_conversions(height_input)
-    lean_body_mass_kg = lean_body_mass.lean_body_mass_calculation_kg(
-        weight, body_fat_input, height, gender, training_age_input
-    )
-    calc_bmr = bmr.calculate_bmr(gender, age, weight, height, lean_body_mass_kg)
-    activity = activity_factor.calculate_activity_factor(
-        daily_step_activity_input, job_type_input, sleep_score_input,
-        body_fat_input, lifting_frequency_input, cardio_frequency_input
-    )
-    tdee = tdee_calc.calculate_tdee(calc_bmr, activity)
-    nutrition_maxtrix = tdee_output.matrix_goal_plan(tdee, lean_body_mass_kg)
 
-    #================== Lifting program =========================
+    lean_body_mass_kg = lean_body_mass.lean_body_mass_calculation_kg(
+        weight,
+        body_fat_input,
+        height,
+        gender,
+        training_age_input,
+    )
+
+    calc_bmr = bmr.calculate_bmr(
+        gender,
+        age,
+        weight,
+        height,
+        lean_body_mass_kg,
+    )
+
+    activity = activity_factor.calculate_activity_factor(
+        daily_step_activity_input,
+        job_type_input,
+        sleep_score_input,
+        body_fat_input,
+        lifting_frequency_input,
+        cardio_frequency_input,
+    )
+
+    tdee = tdee_calc.calculate_tdee(calc_bmr, activity)
+
+    tdee_percentage, carb_percentage, goal_type_label = tdee_output.user_nutrition_plan(
+        nutrition_goal,
+        nutrition_goal_level,
+    )
+
+    header, goal_label_matrix, kcal, proteins, carbs, fat, fiber = tdee_output.nutrition_table(
+        tdee,
+        lean_body_mass_kg,
+        goal_type_label,
+        tdee_percentage,
+        carb_percentage,
+    )
+
+    # ================== Lifting program =========================
     selected = user_program(rank_input, lifting_frequency_input)
     evaluated_program, one_rms = evaluate_selected_program(selected, EXERCISES)
     full_program = attach_weekly_prescriptions(evaluated_program)
@@ -189,8 +648,8 @@ def main():
 
     if len(full_program) != len(day_offsets):
         raise RuntimeError(
-            f"The selected program has {len(full_program)} days but training frequency ({lifting_frequency_input}) "
-            f"maps to {len(day_offsets)} calendar days."
+            f"The selected program has {len(full_program)} days but training frequency "
+            f"({lifting_frequency_input}) maps to {len(day_offsets)} calendar days."
         )
 
     last_day_offset = day_offsets[-1]
@@ -198,7 +657,7 @@ def main():
 
     maxes_list = build_maxes_list(full_program)
 
-    # -------------------- Build HTML (REAL TAGS, NOT ESCAPED) --------------------
+    # -------------------- Build HTML --------------------
     week_colors = [
         "#D5BA96",
         "#D9D2B6",
@@ -208,9 +667,8 @@ def main():
         "#BCA77F",
     ]
 
-    # Safe injection for textarea & JS
     initial_inputs_text_for_textarea = html_escape(initial_inputs_text)
-    session_default_text_js = json.dumps(initial_inputs_text)  # safe JS string
+    session_default_text_js = json.dumps(initial_inputs_text)
 
     html_content = f"""<!DOCTYPE html>
 <html>
@@ -295,10 +753,10 @@ def main():
 
     .day-card table {{
       box-shadow: none;
-      margin: 0;
+      margin: 0 0 20px 0;
       border-collapse: collapse;
       width: 100%;
-      background: white; /* fixed */
+      background: white;
     }}
 
     details {{
@@ -409,6 +867,7 @@ def main():
 
             for ex in day:
                 name = ex.get("name", ex.get("key", "<unknown>"))
+
                 try:
                     week_block = ex["weeks"][week_index]
                     weight_val = week_block["weight"]
@@ -469,6 +928,7 @@ def main():
           document.addEventListener('DOMContentLoaded', () => {{
             const box = document.getElementById('liftInputBox');
             const saved = localStorage.getItem('liftInputs');
+
             if (saved && saved.trim().length > 0) {{
               box.value = saved;
             }} else {{
@@ -484,6 +944,7 @@ def main():
 
           function loadLocal() {{
             const saved = localStorage.getItem('liftInputs');
+
             if (saved) {{
               document.getElementById('liftInputBox').value = saved;
             }} else {{
@@ -523,32 +984,20 @@ def main():
       </div>
     </details>
   </section>
-
-  <section id="nutrition-goals">
-    <details class="collapsible">
-      <summary class="summary-header">Nutrition Goals</summary>
-      <div class="collapse-body">
-        <table>
-          <tr>
 """
 
-    for header in nutrition_maxtrix[0]:
-        html_content += f"<th>{header}</th>"
-
-    html_content += "</tr>"
-
-    for row in nutrition_maxtrix[1:]:
-        html_content += "<tr>"
-        for cell in row:
-            html_content += f"<td>{cell}</td>"
-        html_content += "</tr>"
+    html_content += build_nutrition_goals_html(
+        header=header,
+        goal_label_matrix=goal_label_matrix,
+        kcal=kcal,
+        proteins=proteins,
+        carbs=carbs,
+        fat=fat,
+        fiber=fiber,
+        meal_frequency=meal_frequency_input,
+    )
 
     html_content += """
-        </table>
-      </div>
-    </details>
-  </section>
-
 </body>
 </html>
 """
