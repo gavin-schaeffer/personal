@@ -39,6 +39,10 @@ EXERCISES = {
     "machine_row":
     {"name": "Machine Row", "role": "main aux", "ask_input": True},
 
+    "seated_cable_row":
+    {"name": "Seated Cable Row", "role": "main aux", "ask_input": True},
+
+
     "pull_down":
     {"name": "Lat Pulldown", "role": "main aux", "ask_input": True},
 
@@ -51,7 +55,7 @@ EXERCISES = {
     "rear_delts":
     {"name": "Rear Delt Fly", "role": "aux", "ask_input": True},
 
-    "support_back_row":
+    "incline_bench_support_back_row":
     {"name": "Chest Supported Row", "role": "main aux", "ask_input": True},
 
 

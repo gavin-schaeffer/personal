@@ -31,7 +31,7 @@ advd_3d_upper_a = [
 ]
 
 advd_3d_lower_b = [
-    EXERCISES["front_squat"],
+    EXERCISES["split_squat"],
     EXERCISES["rdl"],
     EXERCISES["leg_curl"],
     EXERCISES["calf_raises"],
@@ -53,14 +53,14 @@ advd_4d_upper_a = [
 
 advd_4d_lower_b = [
     EXERCISES["deadlift"],
-    EXERCISES["front_squat"],
+    EXERCISES["split_squat"],
     EXERCISES["leg_curl"],
     EXERCISES["calf_raises"],
 ]
 
 advd_4d_upper_b = [
     EXERCISES["pull_down"],
-    EXERCISES["support_back_row"],
+    EXERCISES["machine_row"],
     EXERCISES["rear_delts"],
     EXERCISES["barbell_curl"],
 ]
@@ -80,14 +80,14 @@ advd_5d_push = [
 ]
 
 advd_5d_pull_light = [
+    EXERCISES["deadlift"],
+    EXERCISES["seated_cable_row"],
     EXERCISES["pull_down"],
-    EXERCISES["support_back_row"],
-    EXERCISES["rear_delts"],
     EXERCISES["barbell_curl"],
 ]
 
 advd_5d_lower_b = [
-    EXERCISES["front_squat"],
+    EXERCISES["split_squat"],
     EXERCISES["rdl"],
     EXERCISES["leg_curl"],
     EXERCISES["calf_raises"],
@@ -95,15 +95,16 @@ advd_5d_lower_b = [
 
 advd_5d_upper_aux = [
     EXERCISES["incline_bench"],
-    EXERCISES["pullovers"],
-    EXERCISES["skull_crushers"],
+    EXERCISES["seated_cable_row"],
     EXERCISES["lateral_raises"],
+    EXERCISES["skull_crushers"],
+    EXERCISES["barbell_curl"],
 ]
 
 # =================== Easier / Balanced =======================
 
 easy_2d_lower_a = [
-    EXERCISES["leg_press"],
+    EXERCISES["split_squat"],
     EXERCISES["leg_extension"],
     EXERCISES["leg_curl"],
     EXERCISES["calf_raises"],
@@ -118,7 +119,7 @@ easy_2d_upper_a = [
 
 
 easy_3d_lower_a = [
-    EXERCISES["leg_press"],
+    EXERCISES["split_squat"],
     EXERCISES["leg_extension"],
     EXERCISES["leg_curl"],
     EXERCISES["calf_raises"],
@@ -140,7 +141,7 @@ easy_3d_lower_b = [
 
 
 easy_4d_lower_a = [
-    EXERCISES["leg_press"],
+    EXERCISES["split_squat"],
     EXERCISES["leg_extension"],
     EXERCISES["leg_curl"],
     EXERCISES["calf_raises"],
@@ -162,14 +163,14 @@ easy_4d_lower_b = [
 
 easy_4d_upper_b = [
     EXERCISES["pull_down"],
-    EXERCISES["support_back_row"],
+    EXERCISES["incline_bench_support_back_row"],
     EXERCISES["rear_delts"],
     EXERCISES["barbell_curl"],
 ]
 
 
 easy_5d_lower_a = [
-    EXERCISES["leg_press"],
+    EXERCISES["back_squat"],
     EXERCISES["leg_extension"],
     EXERCISES["leg_curl"],
     EXERCISES["calf_raises"],
@@ -183,29 +184,31 @@ easy_5d_push = [
 ]
 
 easy_5d_pull_light = [
+    EXERCISES["seated_cable_row"],
     EXERCISES["pull_down"],
-    EXERCISES["rear_delts"],
+    EXERCISES["incline_bench_support_back_row"],
     EXERCISES["barbell_curl"],
 ]
 
 easy_5d_lower_b = [
-    EXERCISES["rdl"],
     EXERCISES["split_squat"],
+    EXERCISES["rdl"],
     EXERCISES["leg_curl"],
     EXERCISES["calf_raises"],
 ]
 
 easy_5d_upper_aux = [
     EXERCISES["incline_bench"],
-    EXERCISES["pullovers"],
+    EXERCISES["seated_cable_row"],
     EXERCISES["lateral_raises"],
     EXERCISES["tricep_pushdowns"],
+    EXERCISES["barbell_curl"],
 ]
 
 # =================== Injured / Pelvic-Floor-Friendly =======================
 
 inj_2d_lower_a = [
-    EXERCISES["leg_press"],
+    EXERCISES["split_squat"],
     EXERCISES["leg_extension"],
     EXERCISES["leg_curl"],
     EXERCISES["calf_raises"],
@@ -220,7 +223,7 @@ inj_2d_upper_a = [
 
 
 inj_3d_lower_a = [
-    EXERCISES["leg_press"],
+    EXERCISES["split_squat"],
     EXERCISES["leg_extension"],
     EXERCISES["leg_curl"],
     EXERCISES["calf_raises"],
@@ -242,7 +245,7 @@ inj_3d_lower_b = [
 
 
 inj_4d_lower_a = [
-    EXERCISES["leg_press"],
+    EXERCISES["split_squat"],
     EXERCISES["leg_extension"],
     EXERCISES["leg_curl"],
     EXERCISES["calf_raises"],
@@ -264,14 +267,14 @@ inj_4d_lower_b = [
 
 inj_4d_upper_b = [
     EXERCISES["pull_down"],
-    EXERCISES["support_back_row"],
+    EXERCISES["incline_bench_support_back_row"],
     EXERCISES["rear_delts"],
     EXERCISES["barbell_curl"],
 ]
 
 
 inj_5d_lower_a = [
-    EXERCISES["leg_press"],
+    EXERCISES["split_squat"],
     EXERCISES["leg_extension"],
     EXERCISES["leg_curl"],
     EXERCISES["calf_raises"],
@@ -286,6 +289,7 @@ inj_5d_push = [
 
 inj_5d_pull_light = [
     EXERCISES["pull_down"],
+    EXERCISES["incline_bench_support_back_row"],
     EXERCISES["rear_delts"],
     EXERCISES["barbell_curl"],
 ]

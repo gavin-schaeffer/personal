@@ -3,6 +3,7 @@ from pathlib import Path
 from itertools import product
 import os
 import json
+import random
 from datetime import datetime, timedelta
 
 import nutritional_facts
@@ -150,6 +151,115 @@ def _darken_hex(hex_color: str, factor: float = 0.75) -> str:
     b = max(0, min(255, int(b * factor)))
 
     return f"#{r:02X}{g:02X}{b:02X}"
+
+
+def _hex_to_rgb(hex_color: str) -> Tuple[int, int, int]:
+    """
+    Convert a hex color to RGB.
+    """
+    hex_color = hex_color.strip().lstrip("#")
+
+    if len(hex_color) != 6:
+        return (59, 58, 48)
+
+    return (
+        int(hex_color[0:2], 16),
+        int(hex_color[2:4], 16),
+        int(hex_color[4:6], 16),
+    )
+
+
+def _rgb_to_hex(r: int, g: int, b: int) -> str:
+    """
+    Convert RGB values to a hex color.
+    """
+    r = max(0, min(255, int(r)))
+    g = max(0, min(255, int(g)))
+    b = max(0, min(255, int(b)))
+
+    return f"#{r:02X}{g:02X}{b:02X}"
+
+
+def _relative_luminance(hex_color: str) -> float:
+    """
+    Calculates perceived brightness so text can stay readable.
+    """
+    r, g, b = _hex_to_rgb(hex_color)
+
+    def channel(c: int) -> float:
+        c = c / 255
+        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+
+    return (
+        0.2126 * channel(r)
+        + 0.7152 * channel(g)
+        + 0.0722 * channel(b)
+    )
+
+
+def _text_color_for_bg(hex_color: str) -> str:
+    """
+    Pick white or dark text depending on background color.
+    """
+    return "#FFFFFF" if _relative_luminance(hex_color) < 0.42 else "#2B2118"
+
+
+def _blend_with_white(hex_color: str, amount: float = 0.35) -> str:
+    """
+    Softens a color by blending it with white.
+    amount closer to 1 means lighter.
+    """
+    r, g, b = _hex_to_rgb(hex_color)
+
+    r = r + (255 - r) * amount
+    g = g + (255 - g) * amount
+    b = b + (255 - b) * amount
+
+    return _rgb_to_hex(r, g, b)
+
+
+def _random_base_hex() -> str:
+    """
+    Generate a random base color.
+    """
+    return _rgb_to_hex(
+        random.randint(40, 215),
+        random.randint(40, 215),
+        random.randint(40, 215),
+    )
+
+
+def _random_soft_hex() -> str:
+    """
+    Generate a readable soft color for backgrounds.
+    """
+    return _blend_with_white(_random_base_hex(), amount=random.uniform(0.35, 0.65))
+
+
+def generate_random_color_scheme(count: int = 12) -> Dict[str, Any]:
+    """
+    Random page-wide color scheme.
+    Keeps all program content the same and only changes colors.
+    """
+    page_bg = _blend_with_white(_random_base_hex(), amount=0.78)
+
+    primary_bg = _darken_hex(_random_base_hex(), factor=random.uniform(0.45, 0.70))
+    secondary_bg = _darken_hex(_random_base_hex(), factor=random.uniform(0.45, 0.70))
+    accent_bg = _darken_hex(_random_base_hex(), factor=random.uniform(0.50, 0.75))
+
+    week_colors = [_random_soft_hex() for _ in range(count)]
+
+    return {
+        "page_bg": page_bg,
+        "body_text": "#2B2118",
+        "primary_bg": primary_bg,
+        "primary_text": _text_color_for_bg(primary_bg),
+        "secondary_bg": secondary_bg,
+        "secondary_text": _text_color_for_bg(secondary_bg),
+        "accent_bg": accent_bg,
+        "accent_text": _text_color_for_bg(accent_bg),
+        "week_colors": week_colors,
+    }
 
 
 def html_escape(text: str) -> str:
@@ -567,7 +677,7 @@ def build_nutrition_goals_html(
 
 def main():
     now = datetime.now()
-    today = now.date()
+    today = now.date() - timedelta(days=4)
 
     days_ahead = (0 - today.weekday() + 7) % 7
     next_monday = today + timedelta(days=days_ahead)
@@ -658,14 +768,8 @@ def main():
     maxes_list = build_maxes_list(full_program)
 
     # -------------------- Build HTML --------------------
-    week_colors = [
-        "#D5BA96",
-        "#D9D2B6",
-        "#CAB48B",
-        "#A89B7C",
-        "#C1B095",
-        "#BCA77F",
-    ]
+    color_scheme = generate_random_color_scheme(count=max(num_weeks, 12))
+    week_colors = color_scheme["week_colors"]
 
     initial_inputs_text_for_textarea = html_escape(initial_inputs_text)
     session_default_text_js = json.dumps(initial_inputs_text)
@@ -682,14 +786,15 @@ def main():
       margin: 20px;
       line-height: 1.8;
       font-size: 16px;
-      color: #2B2118;
+      color: {color_scheme["body_text"]};
+      background-color: {color_scheme["page_bg"]};
     }}
 
     h1, h2, h3 {{
       font-family: 'Oswald', sans-serif;
       font-weight: 700;
       text-align: center;
-      color: #3B3A30;
+      color: {color_scheme["primary_bg"]};
       text-transform: uppercase;
     }}
 
@@ -707,8 +812,8 @@ def main():
     }}
 
     th {{
-      background-color: #3E4E2F;
-      color: white;
+      background-color: {color_scheme["secondary_bg"]};
+      color: {color_scheme["secondary_text"]};
       font-size: 16px;
       font-family: 'Oswald', sans-serif;
       font-weight: bold;
@@ -736,7 +841,7 @@ def main():
     .day-card {{
       background: rgba(255, 255, 255, 0.82);
       border-radius: 10px;
-      border: 6px solid #3B3A30;
+      border: 6px solid {color_scheme["primary_bg"]};
       margin: 14px 0;
       overflow: hidden;
     }}
@@ -745,8 +850,8 @@ def main():
       font-family: 'Oswald', sans-serif;
       font-size: 18px;
       padding: 10px 12px;
-      background: #3B3A30;
-      color: white;
+      background: {color_scheme["primary_bg"]};
+      color: {color_scheme["primary_text"]};
       text-align: left;
       letter-spacing: 0.5px;
     }}
@@ -779,8 +884,8 @@ def main():
       cursor: pointer;
       padding: 12px 14px;
       margin: 0;
-      background-color: #D5BA96;
-      color: #fff;
+      background-color: {color_scheme["accent_bg"]};
+      color: {color_scheme["accent_text"]};
       font-family: 'Oswald', sans-serif;
       font-size: 20px;
       text-transform: uppercase;
@@ -839,11 +944,12 @@ def main():
         week_end = week_start + timedelta(days=6)
 
         week_bg = week_colors[week_index % len(week_colors)]
-        week_border = _darken_hex(week_bg, factor=0.72)
+        week_border = _darken_hex(week_bg, factor=0.58)
+        week_text = _text_color_for_bg(week_border)
 
         html_content += f"""
         <details class="week-collapsible">
-          <summary class="week-summary" style="background-color:{week_border};">
+          <summary class="week-summary" style="background-color:{week_border}; color:{week_text};">
             Week {week_index + 1}: {week_start.strftime('%m-%d-%y')} to {week_end.strftime('%m-%d-%y')}
           </summary>
 
@@ -979,28 +1085,28 @@ def main():
           </tr>
 """
 
-    html_content += """
-        </table>
-      </div>
-    </details>
-  </section>
-"""
+#     html_content += """
+#         </table>
+#       </div>
+#     </details>
+#   </section>
+# """
 
-    html_content += build_nutrition_goals_html(
-        header=header,
-        goal_label_matrix=goal_label_matrix,
-        kcal=kcal,
-        proteins=proteins,
-        carbs=carbs,
-        fat=fat,
-        fiber=fiber,
-        meal_frequency=meal_frequency_input,
-    )
+#     html_content += build_nutrition_goals_html(
+#         header=header,
+#         goal_label_matrix=goal_label_matrix,
+#         kcal=kcal,
+#         proteins=proteins,
+#         carbs=carbs,
+#         fat=fat,
+#         fiber=fiber,
+#         meal_frequency=meal_frequency_input,
+#     )
 
-    html_content += """
-</body>
-</html>
-"""
+#     html_content += """
+# </body>
+# </html>
+# """
 
     # Write file
     output_path = "/home/u302264/personal/health/programs"
