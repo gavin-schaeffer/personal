@@ -677,7 +677,7 @@ def build_nutrition_goals_html(
 
 def main():
     now = datetime.now()
-    today = now.date() - timedelta(days=4)
+    today = now.date()
 
     days_ahead = (0 - today.weekday() + 7) % 7
     next_monday = today + timedelta(days=days_ahead)
