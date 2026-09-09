@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>The Program to Get Jacked</title>
+  <title>Hypertrophy Program</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -11,14 +11,14 @@
       line-height: 1.8;
       font-size: 16px;
       color: #2B2118;
-      background-color: #F5ECE5;
+      background-color: #DCEBD8;
     }
 
     h1, h2, h3 {
       font-family: 'Oswald', sans-serif;
       font-weight: 700;
       text-align: center;
-      color: #626B5C;
+      color: #231D67;
       text-transform: uppercase;
     }
 
@@ -30,18 +30,20 @@
     table {
       border-collapse: collapse;
       width: 100%;
+      min-width: 680px;
       margin-bottom: 20px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       background: white;
     }
 
     th {
-      background-color: #4B7061;
+      background-color: #2A1C35;
       color: #FFFFFF;
       font-size: 16px;
       font-family: 'Oswald', sans-serif;
       font-weight: bold;
       padding: 12px;
+      white-space: nowrap;
     }
 
     td {
@@ -51,6 +53,7 @@
       font-family: 'Roboto Slab', serif;
       font-size: 15px;
       background: white;
+      white-space: nowrap;
     }
 
     .week-section {
@@ -60,21 +63,23 @@
       border: 8px solid var(--week-border);
       background-color: var(--week-bg);
       box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+      overflow-x: auto;
     }
 
     .day-card {
       background: rgba(255, 255, 255, 0.82);
       border-radius: 10px;
-      border: 6px solid #626B5C;
+      border: 6px solid #231D67;
       margin: 14px 0;
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
     }
 
     .day-title {
       font-family: 'Oswald', sans-serif;
       font-size: 18px;
       padding: 10px 12px;
-      background: #626B5C;
+      background: #231D67;
       color: #FFFFFF;
       text-align: left;
       letter-spacing: 0.5px;
@@ -108,7 +113,7 @@
       cursor: pointer;
       padding: 12px 14px;
       margin: 0;
-      background-color: #473745;
+      background-color: #1A2B58;
       color: #FFFFFF;
       font-family: 'Oswald', sans-serif;
       font-size: 20px;
@@ -129,12 +134,36 @@
       list-style: none;
     }
 
-    .collapse-body { padding: 12px 12px 16px 12px; }
+    .collapse-body {
+      padding: 12px 12px 16px 12px;
+      overflow-x: auto;
+    }
+
+    textarea {
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+
+    @media (max-width: 760px) {
+      body {
+        margin: 10px;
+        font-size: 14px;
+      }
+
+      table {
+        min-width: 640px;
+      }
+
+      th, td {
+        font-size: 13px;
+        padding: 8px;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <h1>The "Getting Jacked" Program</h1>
+  <h1>The "Hypertrophy" Program</h1>
 
   <div style="display:flex; gap:10px; justify-content:center; margin: 8px 0 16px;">
     <button id="expandAllBtn" type="button">Expand all</button>
@@ -162,11 +191,11 @@
       <div class="collapse-body">
 
         <details class="week-collapsible">
-          <summary class="week-summary" style="background-color:#836678; color:#FFFFFF;">
+          <summary class="week-summary" style="background-color:#5F7F6A; color:#FFFFFF;">
             Week 1: 09-14-26 to 09-20-26
           </summary>
 
-          <div class="week-section" style="--week-bg: #E3B0D0; --week-border: #836678; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+          <div class="week-section" style="--week-bg: #A4DBB8; --week-border: #5F7F6A; background-color: var(--week-bg); border: 8px solid var(--week-border);">
 
             <div class="day-card">
               <div class="day-title">Day 1: Monday, 09-14-26</div>
@@ -174,41 +203,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Split Squat</td>
                   <td>45</td>
-                  <td>58%</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>58%</td>
                 </tr>
 
                 <tr>
                   <td>Leg Extension</td>
-                  <td>75</td>
-                  <td>56%</td>
+                  <td>70</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Hamstring Curl</td>
                   <td>55</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>65</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -220,41 +249,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Flat Press</td>
                   <td>175</td>
-                  <td>68%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Pulldown</td>
-                  <td>125</td>
-                  <td>68%</td>
+                  <td>120</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>15</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Tricep Pushdowns</td>
                   <td>35</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -266,41 +295,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Bench Chest-Supported Row</td>
                   <td>35</td>
-                  <td>58%</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>58%</td>
                 </tr>
 
                 <tr>
                   <td>Pullover</td>
-                  <td>50</td>
-                  <td>56%</td>
+                  <td>45</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Rear Delt Fly</td>
                   <td>10</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
-                  <td>Curl</td>
+                  <td>Bicep Curl</td>
                   <td>35</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -312,41 +341,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Leg Press</td>
                   <td>155</td>
-                  <td>68%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Goblet Squat</td>
-                  <td>40</td>
-                  <td>58%</td>
+                  <td>35</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>58%</td>
                 </tr>
 
                 <tr>
                   <td>Hip Thrust</td>
                   <td>80</td>
-                  <td>68%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>65</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -358,41 +387,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Press</td>
                   <td>135</td>
-                  <td>68%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Nuetral Machine Row</td>
-                  <td>95</td>
-                  <td>58%</td>
+                  <td>70</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>58%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>15</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Skull Crushers</td>
                   <td>35</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -402,11 +431,11 @@
         </details>
 
         <details class="week-collapsible">
-          <summary class="week-summary" style="background-color:#678085; color:#FFFFFF;">
+          <summary class="week-summary" style="background-color:#5E747A; color:#FFFFFF;">
             Week 2: 09-21-26 to 09-27-26
           </summary>
 
-          <div class="week-section" style="--week-bg: #B3DEE6; --week-border: #678085; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+          <div class="week-section" style="--week-bg: #A3C9D3; --week-border: #5E747A; background-color: var(--week-bg); border: 8px solid var(--week-border);">
 
             <div class="day-card">
               <div class="day-title">Day 1: Monday, 09-21-26</div>
@@ -414,41 +443,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Split Squat</td>
                   <td>50</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Leg Extension</td>
-                  <td>75</td>
-                  <td>56%</td>
+                  <td>70</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Hamstring Curl</td>
                   <td>55</td>
-                  <td>56%</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>65</td>
-                  <td>56%</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -460,41 +489,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Flat Press</td>
                   <td>175</td>
-                  <td>68%</td>
                   <td>4</td>
                   <td>12</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Pulldown</td>
-                  <td>125</td>
-                  <td>68%</td>
+                  <td>120</td>
                   <td>4</td>
                   <td>12</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>15</td>
-                  <td>56%</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Tricep Pushdowns</td>
                   <td>35</td>
-                  <td>56%</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -506,41 +535,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Bench Chest-Supported Row</td>
                   <td>40</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Pullover</td>
-                  <td>50</td>
-                  <td>56%</td>
+                  <td>45</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Rear Delt Fly</td>
                   <td>10</td>
-                  <td>56%</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
-                  <td>Curl</td>
+                  <td>Bicep Curl</td>
                   <td>35</td>
-                  <td>56%</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -552,41 +581,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Leg Press</td>
                   <td>155</td>
-                  <td>68%</td>
                   <td>4</td>
                   <td>12</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Goblet Squat</td>
-                  <td>45</td>
-                  <td>64%</td>
+                  <td>40</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Hip Thrust</td>
                   <td>80</td>
-                  <td>68%</td>
                   <td>4</td>
                   <td>12</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>65</td>
-                  <td>56%</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -598,41 +627,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Press</td>
                   <td>135</td>
-                  <td>68%</td>
                   <td>4</td>
                   <td>12</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Nuetral Machine Row</td>
-                  <td>100</td>
-                  <td>64%</td>
+                  <td>80</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>15</td>
-                  <td>56%</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Skull Crushers</td>
                   <td>35</td>
-                  <td>56%</td>
                   <td>3</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -642,11 +671,11 @@
         </details>
 
         <details class="week-collapsible">
-          <summary class="week-summary" style="background-color:#497A6A; color:#FFFFFF;">
+          <summary class="week-summary" style="background-color:#5D8075; color:#FFFFFF;">
             Week 3: 09-28-26 to 10-04-26
           </summary>
 
-          <div class="week-section" style="--week-bg: #7FD4B8; --week-border: #497A6A; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+          <div class="week-section" style="--week-bg: #A1DECB; --week-border: #5D8075; background-color: var(--week-bg); border: 8px solid var(--week-border);">
 
             <div class="day-card">
               <div class="day-title">Day 1: Monday, 09-28-26</div>
@@ -654,41 +683,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Split Squat</td>
                   <td>50</td>
-                  <td>64%</td>
                   <td>4</td>
                   <td>12</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Leg Extension</td>
-                  <td>80</td>
-                  <td>60%</td>
+                  <td>75</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Hamstring Curl</td>
                   <td>60</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>70</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -700,41 +729,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Flat Press</td>
                   <td>185</td>
-                  <td>72%</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Pulldown</td>
-                  <td>135</td>
-                  <td>72%</td>
+                  <td>130</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>20</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Tricep Pushdowns</td>
                   <td>35</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -746,41 +775,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Bench Chest-Supported Row</td>
                   <td>40</td>
-                  <td>64%</td>
                   <td>4</td>
                   <td>12</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Pullover</td>
                   <td>50</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Rear Delt Fly</td>
                   <td>10</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
-                  <td>Curl</td>
-                  <td>35</td>
-                  <td>60%</td>
+                  <td>Bicep Curl</td>
+                  <td>40</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -792,41 +821,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Leg Press</td>
                   <td>160</td>
-                  <td>72%</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Goblet Squat</td>
-                  <td>45</td>
-                  <td>64%</td>
+                  <td>40</td>
                   <td>4</td>
                   <td>12</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Hip Thrust</td>
                   <td>85</td>
-                  <td>72%</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>70</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -838,41 +867,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Press</td>
                   <td>140</td>
-                  <td>72%</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Nuetral Machine Row</td>
-                  <td>100</td>
-                  <td>64%</td>
+                  <td>80</td>
                   <td>4</td>
                   <td>12</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>20</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Skull Crushers</td>
                   <td>40</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -882,11 +911,11 @@
         </details>
 
         <details class="week-collapsible">
-          <summary class="week-summary" style="background-color:#74527C; color:#FFFFFF;">
+          <summary class="week-summary" style="background-color:#7D6F88; color:#FFFFFF;">
             Week 4: 10-05-26 to 10-11-26
           </summary>
 
-          <div class="week-section" style="--week-bg: #C98ED7; --week-border: #74527C; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+          <div class="week-section" style="--week-bg: #D9C1EC; --week-border: #7D6F88; background-color: var(--week-bg); border: 8px solid var(--week-border);">
 
             <div class="day-card">
               <div class="day-title">Day 1: Monday, 10-05-26</div>
@@ -894,41 +923,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Split Squat</td>
                   <td>50</td>
-                  <td>68%</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Leg Extension</td>
-                  <td>80</td>
-                  <td>60%</td>
+                  <td>75</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Hamstring Curl</td>
                   <td>60</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>70</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -940,41 +969,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Flat Press</td>
                   <td>185</td>
-                  <td>72%</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Pulldown</td>
-                  <td>135</td>
-                  <td>72%</td>
+                  <td>130</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>20</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Tricep Pushdowns</td>
                   <td>35</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -986,41 +1015,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Bench Chest-Supported Row</td>
                   <td>40</td>
-                  <td>68%</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Pullover</td>
                   <td>50</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Rear Delt Fly</td>
                   <td>10</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
-                  <td>Curl</td>
-                  <td>35</td>
-                  <td>60%</td>
+                  <td>Bicep Curl</td>
+                  <td>40</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -1032,41 +1061,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Leg Press</td>
                   <td>160</td>
-                  <td>72%</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Goblet Squat</td>
-                  <td>50</td>
-                  <td>68%</td>
+                  <td>40</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Hip Thrust</td>
                   <td>85</td>
-                  <td>72%</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>70</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -1078,41 +1107,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Press</td>
                   <td>140</td>
-                  <td>72%</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Nuetral Machine Row</td>
-                  <td>110</td>
-                  <td>68%</td>
+                  <td>85</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>20</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Skull Crushers</td>
                   <td>40</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -1122,11 +1151,11 @@
         </details>
 
         <details class="week-collapsible">
-          <summary class="week-summary" style="background-color:#507461; color:#FFFFFF;">
+          <summary class="week-summary" style="background-color:#57655D; color:#FFFFFF;">
             Week 5: 10-12-26 to 10-18-26
           </summary>
 
-          <div class="week-section" style="--week-bg: #8AC9A8; --week-border: #507461; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+          <div class="week-section" style="--week-bg: #96AFA1; --week-border: #57655D; background-color: var(--week-bg); border: 8px solid var(--week-border);">
 
             <div class="day-card">
               <div class="day-title">Day 1: Monday, 10-12-26</div>
@@ -1134,41 +1163,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Split Squat</td>
                   <td>50</td>
-                  <td>68%</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Leg Extension</td>
-                  <td>80</td>
-                  <td>60%</td>
+                  <td>75</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Hamstring Curl</td>
                   <td>60</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>70</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -1180,41 +1209,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Flat Press</td>
                   <td>195</td>
-                  <td>76%</td>
                   <td>4</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Pulldown</td>
-                  <td>140</td>
-                  <td>76%</td>
+                  <td>135</td>
                   <td>4</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>20</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Tricep Pushdowns</td>
                   <td>35</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -1226,41 +1255,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Bench Chest-Supported Row</td>
                   <td>40</td>
-                  <td>68%</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Pullover</td>
                   <td>50</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Rear Delt Fly</td>
                   <td>10</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
-                  <td>Curl</td>
-                  <td>35</td>
-                  <td>60%</td>
+                  <td>Bicep Curl</td>
+                  <td>40</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -1272,41 +1301,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Leg Press</td>
                   <td>170</td>
-                  <td>76%</td>
                   <td>4</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Goblet Squat</td>
-                  <td>50</td>
-                  <td>68%</td>
+                  <td>40</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Hip Thrust</td>
                   <td>90</td>
-                  <td>76%</td>
                   <td>4</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>70</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -1318,41 +1347,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Press</td>
                   <td>150</td>
-                  <td>76%</td>
                   <td>4</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Nuetral Machine Row</td>
-                  <td>110</td>
-                  <td>68%</td>
+                  <td>85</td>
                   <td>4</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>20</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Skull Crushers</td>
                   <td>40</td>
-                  <td>60%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -1362,11 +1391,11 @@
         </details>
 
         <details class="week-collapsible">
-          <summary class="week-summary" style="background-color:#6E6D79; color:#FFFFFF;">
+          <summary class="week-summary" style="background-color:#837A62; color:#FFFFFF;">
             Week 6: 10-19-26 to 10-25-26
           </summary>
 
-          <div class="week-section" style="--week-bg: #BEBDD2; --week-border: #6E6D79; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+          <div class="week-section" style="--week-bg: #E2D4AA; --week-border: #837A62; background-color: var(--week-bg); border: 8px solid var(--week-border);">
 
             <div class="day-card">
               <div class="day-title">Day 1: Monday, 10-19-26</div>
@@ -1374,41 +1403,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Split Squat</td>
                   <td>50</td>
-                  <td>68%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Leg Extension</td>
-                  <td>85</td>
-                  <td>64%</td>
+                  <td>80</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Hamstring Curl</td>
                   <td>65</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>75</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>64%</td>
                 </tr>
 
               </table>
@@ -1420,41 +1449,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Flat Press</td>
                   <td>195</td>
-                  <td>76%</td>
                   <td>4</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Pulldown</td>
-                  <td>140</td>
-                  <td>76%</td>
+                  <td>135</td>
                   <td>4</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>20</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Tricep Pushdowns</td>
                   <td>40</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>64%</td>
                 </tr>
 
               </table>
@@ -1466,41 +1495,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Bench Chest-Supported Row</td>
                   <td>40</td>
-                  <td>68%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Pullover</td>
-                  <td>55</td>
-                  <td>64%</td>
+                  <td>50</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Rear Delt Fly</td>
                   <td>15</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
-                  <td>Curl</td>
+                  <td>Bicep Curl</td>
                   <td>40</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>64%</td>
                 </tr>
 
               </table>
@@ -1512,41 +1541,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Leg Press</td>
                   <td>170</td>
-                  <td>76%</td>
                   <td>4</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Goblet Squat</td>
-                  <td>50</td>
-                  <td>68%</td>
+                  <td>40</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Hip Thrust</td>
                   <td>90</td>
-                  <td>76%</td>
                   <td>4</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>75</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>64%</td>
                 </tr>
 
               </table>
@@ -1558,41 +1587,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Press</td>
                   <td>150</td>
-                  <td>76%</td>
                   <td>4</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Nuetral Machine Row</td>
-                  <td>110</td>
-                  <td>68%</td>
+                  <td>85</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>20</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Skull Crushers</td>
                   <td>40</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>64%</td>
                 </tr>
 
               </table>
@@ -1602,11 +1631,11 @@
         </details>
 
         <details class="week-collapsible">
-          <summary class="week-summary" style="background-color:#5E625B; color:#FFFFFF;">
+          <summary class="week-summary" style="background-color:#587266; color:#FFFFFF;">
             Week 7: 10-26-26 to 11-01-26
           </summary>
 
-          <div class="week-section" style="--week-bg: #A3A99E; --week-border: #5E625B; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+          <div class="week-section" style="--week-bg: #99C6B1; --week-border: #587266; background-color: var(--week-bg); border: 8px solid var(--week-border);">
 
             <div class="day-card">
               <div class="day-title">Day 1: Monday, 10-26-26</div>
@@ -1614,41 +1643,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Split Squat</td>
                   <td>50</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Leg Extension</td>
-                  <td>75</td>
-                  <td>56%</td>
+                  <td>70</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Hamstring Curl</td>
                   <td>55</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>65</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -1660,41 +1689,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Flat Press</td>
                   <td>185</td>
-                  <td>72%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Pulldown</td>
-                  <td>135</td>
-                  <td>72%</td>
+                  <td>130</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>15</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Tricep Pushdowns</td>
                   <td>35</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -1706,41 +1735,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Bench Chest-Supported Row</td>
                   <td>40</td>
-                  <td>64%</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Pullover</td>
-                  <td>50</td>
-                  <td>56%</td>
+                  <td>45</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Rear Delt Fly</td>
                   <td>10</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
-                  <td>Curl</td>
+                  <td>Bicep Curl</td>
                   <td>35</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -1752,41 +1781,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Leg Press</td>
                   <td>160</td>
-                  <td>72%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Goblet Squat</td>
-                  <td>45</td>
-                  <td>64%</td>
+                  <td>40</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Hip Thrust</td>
                   <td>85</td>
-                  <td>72%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>65</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -1798,41 +1827,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Press</td>
                   <td>140</td>
-                  <td>72%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>72%</td>
                 </tr>
 
                 <tr>
                   <td>Nuetral Machine Row</td>
-                  <td>100</td>
-                  <td>64%</td>
+                  <td>80</td>
                   <td>3</td>
                   <td>12</td>
+                  <td>64%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>15</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
                 <tr>
                   <td>Skull Crushers</td>
                   <td>35</td>
-                  <td>56%</td>
                   <td>2</td>
                   <td>15</td>
+                  <td>56%</td>
                 </tr>
 
               </table>
@@ -1842,11 +1871,11 @@
         </details>
 
         <details class="week-collapsible">
-          <summary class="week-summary" style="background-color:#8A8A7D; color:#FFFFFF;">
+          <summary class="week-summary" style="background-color:#7D646D; color:#FFFFFF;">
             Week 8: 11-02-26 to 11-08-26
           </summary>
 
-          <div class="week-section" style="--week-bg: #EFEFD8; --week-border: #8A8A7D; background-color: var(--week-bg); border: 8px solid var(--week-border);">
+          <div class="week-section" style="--week-bg: #D8AEBC; --week-border: #7D646D; background-color: var(--week-bg); border: 8px solid var(--week-border);">
 
             <div class="day-card">
               <div class="day-title">Day 1: Monday, 11-02-26</div>
@@ -1854,41 +1883,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Split Squat</td>
                   <td>50</td>
-                  <td>68%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Leg Extension</td>
-                  <td>80</td>
-                  <td>60%</td>
+                  <td>75</td>
                   <td>2</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Hamstring Curl</td>
                   <td>60</td>
-                  <td>60%</td>
                   <td>2</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>70</td>
-                  <td>60%</td>
                   <td>2</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -1900,41 +1929,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Flat Press</td>
                   <td>195</td>
-                  <td>76%</td>
                   <td>3</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Pulldown</td>
-                  <td>140</td>
-                  <td>76%</td>
+                  <td>135</td>
                   <td>3</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>20</td>
-                  <td>60%</td>
                   <td>2</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Tricep Pushdowns</td>
                   <td>35</td>
-                  <td>60%</td>
                   <td>2</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -1946,41 +1975,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Bench Chest-Supported Row</td>
                   <td>40</td>
-                  <td>68%</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Pullover</td>
                   <td>50</td>
-                  <td>60%</td>
                   <td>2</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Rear Delt Fly</td>
                   <td>10</td>
-                  <td>60%</td>
                   <td>2</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
-                  <td>Curl</td>
-                  <td>35</td>
-                  <td>60%</td>
+                  <td>Bicep Curl</td>
+                  <td>40</td>
                   <td>2</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -1992,41 +2021,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Leg Press</td>
                   <td>170</td>
-                  <td>76%</td>
                   <td>3</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Goblet Squat</td>
-                  <td>50</td>
-                  <td>68%</td>
+                  <td>40</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Hip Thrust</td>
                   <td>90</td>
-                  <td>76%</td>
                   <td>3</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Calf Raises</td>
                   <td>70</td>
-                  <td>60%</td>
                   <td>2</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -2038,41 +2067,41 @@
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
-                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
+                  <th>% 1RM</th>
                 </tr>
 
                 <tr>
                   <td>Incline Press</td>
                   <td>150</td>
-                  <td>76%</td>
                   <td>3</td>
                   <td>8</td>
+                  <td>76%</td>
                 </tr>
 
                 <tr>
                   <td>Nuetral Machine Row</td>
-                  <td>110</td>
-                  <td>68%</td>
+                  <td>85</td>
                   <td>3</td>
                   <td>10</td>
+                  <td>68%</td>
                 </tr>
 
                 <tr>
                   <td>Delt Raises</td>
                   <td>20</td>
-                  <td>60%</td>
                   <td>2</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
                 <tr>
                   <td>Skull Crushers</td>
                   <td>40</td>
-                  <td>60%</td>
                   <td>2</td>
                   <td>12</td>
+                  <td>60%</td>
                 </tr>
 
               </table>
@@ -2093,35 +2122,35 @@
           <div class="day-title">Edit / Save Your Inputs</div>
           <div style="padding:12px;">
             <textarea id="liftInputBox" style="width:100%;height:260px;font-family:monospace;font-size:14px;white-space:pre;">=== Week 8 Inputs Snapshot ===
-Generated on: 2026-09-09 14:16:30
+Generated on: 2026-09-09 14:33:22
 
 Day 1
 - Split Squat | 1RM: 75 | try: 10 reps @ 50 lbs (68% 1RM) first
-- Leg Extension | 1RM: 135 | try: 12 reps @ 80 lbs (60% 1RM) first
+- Leg Extension | 1RM: 125 | try: 12 reps @ 75 lbs (60% 1RM) first
 - Hamstring Curl | 1RM: 100 | try: 12 reps @ 60 lbs (60% 1RM) first
 - Calf Raises | 1RM: 120 | try: 12 reps @ 70 lbs (60% 1RM) first
 
 Day 2
 - Flat Press | 1RM: 255 | try: 8 reps @ 195 lbs (76% 1RM) first
-- Pulldown | 1RM: 185 | try: 8 reps @ 140 lbs (76% 1RM) first
+- Pulldown | 1RM: 180 | try: 8 reps @ 135 lbs (76% 1RM) first
 - Delt Raises | 1RM: 30 | try: 12 reps @ 20 lbs (60% 1RM) first
 - Tricep Pushdowns | 1RM: 60 | try: 12 reps @ 35 lbs (60% 1RM) first
 
 Day 3
 - Incline Bench Chest-Supported Row | 1RM: 60 | try: 10 reps @ 40 lbs (68% 1RM) first
-- Pullover | 1RM: 85 | try: 12 reps @ 50 lbs (60% 1RM) first
+- Pullover | 1RM: 80 | try: 12 reps @ 50 lbs (60% 1RM) first
 - Rear Delt Fly | 1RM: 20 | try: 12 reps @ 10 lbs (60% 1RM) first
-- Curl | 1RM: 60 | try: 12 reps @ 35 lbs (60% 1RM) first
+- Bicep Curl | 1RM: 65 | try: 12 reps @ 40 lbs (60% 1RM) first
 
 Day 4
 - Leg Press | 1RM: 225 | try: 8 reps @ 170 lbs (76% 1RM) first
-- Goblet Squat | 1RM: 70 | try: 10 reps @ 50 lbs (68% 1RM) first
+- Goblet Squat | 1RM: 60 | try: 10 reps @ 40 lbs (68% 1RM) first
 - Hip Thrust | 1RM: 120 | try: 8 reps @ 90 lbs (76% 1RM) first
 - Calf Raises | 1RM: 120 | try: 12 reps @ 70 lbs (60% 1RM) first
 
 Day 5
 - Incline Press | 1RM: 195 | try: 8 reps @ 150 lbs (76% 1RM) first
-- Nuetral Machine Row | 1RM: 160 | try: 10 reps @ 110 lbs (68% 1RM) first
+- Nuetral Machine Row | 1RM: 125 | try: 10 reps @ 85 lbs (68% 1RM) first
 - Delt Raises | 1RM: 30 | try: 12 reps @ 20 lbs (60% 1RM) first
 - Skull Crushers | 1RM: 65 | try: 12 reps @ 40 lbs (60% 1RM) first
 </textarea>
@@ -2133,14 +2162,14 @@ Day 5
             </div>
 
             <p style="font-size:12px;color:#555;margin-top:8px;">
-              • “Save to browser” stores your text in this browser (localStorage).<br>
-              • “Load from browser” restores what you saved previously.
+              - Save to browser stores your text in this browser using localStorage.<br>
+              - Load from browser restores what you saved previously.
             </p>
           </div>
         </div>
 
         <script>
-          const sessionDefaultText = "=== Week 8 Inputs Snapshot ===\nGenerated on: 2026-09-09 14:16:30\n\nDay 1\n- Split Squat | 1RM: 75 | try: 10 reps @ 50 lbs (68% 1RM) first\n- Leg Extension | 1RM: 135 | try: 12 reps @ 80 lbs (60% 1RM) first\n- Hamstring Curl | 1RM: 100 | try: 12 reps @ 60 lbs (60% 1RM) first\n- Calf Raises | 1RM: 120 | try: 12 reps @ 70 lbs (60% 1RM) first\n\nDay 2\n- Flat Press | 1RM: 255 | try: 8 reps @ 195 lbs (76% 1RM) first\n- Pulldown | 1RM: 185 | try: 8 reps @ 140 lbs (76% 1RM) first\n- Delt Raises | 1RM: 30 | try: 12 reps @ 20 lbs (60% 1RM) first\n- Tricep Pushdowns | 1RM: 60 | try: 12 reps @ 35 lbs (60% 1RM) first\n\nDay 3\n- Incline Bench Chest-Supported Row | 1RM: 60 | try: 10 reps @ 40 lbs (68% 1RM) first\n- Pullover | 1RM: 85 | try: 12 reps @ 50 lbs (60% 1RM) first\n- Rear Delt Fly | 1RM: 20 | try: 12 reps @ 10 lbs (60% 1RM) first\n- Curl | 1RM: 60 | try: 12 reps @ 35 lbs (60% 1RM) first\n\nDay 4\n- Leg Press | 1RM: 225 | try: 8 reps @ 170 lbs (76% 1RM) first\n- Goblet Squat | 1RM: 70 | try: 10 reps @ 50 lbs (68% 1RM) first\n- Hip Thrust | 1RM: 120 | try: 8 reps @ 90 lbs (76% 1RM) first\n- Calf Raises | 1RM: 120 | try: 12 reps @ 70 lbs (60% 1RM) first\n\nDay 5\n- Incline Press | 1RM: 195 | try: 8 reps @ 150 lbs (76% 1RM) first\n- Nuetral Machine Row | 1RM: 160 | try: 10 reps @ 110 lbs (68% 1RM) first\n- Delt Raises | 1RM: 30 | try: 12 reps @ 20 lbs (60% 1RM) first\n- Skull Crushers | 1RM: 65 | try: 12 reps @ 40 lbs (60% 1RM) first\n";
+          const sessionDefaultText = "=== Week 8 Inputs Snapshot ===\nGenerated on: 2026-09-09 14:33:22\n\nDay 1\n- Split Squat | 1RM: 75 | try: 10 reps @ 50 lbs (68% 1RM) first\n- Leg Extension | 1RM: 125 | try: 12 reps @ 75 lbs (60% 1RM) first\n- Hamstring Curl | 1RM: 100 | try: 12 reps @ 60 lbs (60% 1RM) first\n- Calf Raises | 1RM: 120 | try: 12 reps @ 70 lbs (60% 1RM) first\n\nDay 2\n- Flat Press | 1RM: 255 | try: 8 reps @ 195 lbs (76% 1RM) first\n- Pulldown | 1RM: 180 | try: 8 reps @ 135 lbs (76% 1RM) first\n- Delt Raises | 1RM: 30 | try: 12 reps @ 20 lbs (60% 1RM) first\n- Tricep Pushdowns | 1RM: 60 | try: 12 reps @ 35 lbs (60% 1RM) first\n\nDay 3\n- Incline Bench Chest-Supported Row | 1RM: 60 | try: 10 reps @ 40 lbs (68% 1RM) first\n- Pullover | 1RM: 80 | try: 12 reps @ 50 lbs (60% 1RM) first\n- Rear Delt Fly | 1RM: 20 | try: 12 reps @ 10 lbs (60% 1RM) first\n- Bicep Curl | 1RM: 65 | try: 12 reps @ 40 lbs (60% 1RM) first\n\nDay 4\n- Leg Press | 1RM: 225 | try: 8 reps @ 170 lbs (76% 1RM) first\n- Goblet Squat | 1RM: 60 | try: 10 reps @ 40 lbs (68% 1RM) first\n- Hip Thrust | 1RM: 120 | try: 8 reps @ 90 lbs (76% 1RM) first\n- Calf Raises | 1RM: 120 | try: 12 reps @ 70 lbs (60% 1RM) first\n\nDay 5\n- Incline Press | 1RM: 195 | try: 8 reps @ 150 lbs (76% 1RM) first\n- Nuetral Machine Row | 1RM: 125 | try: 10 reps @ 85 lbs (68% 1RM) first\n- Delt Raises | 1RM: 30 | try: 12 reps @ 20 lbs (60% 1RM) first\n- Skull Crushers | 1RM: 65 | try: 12 reps @ 40 lbs (60% 1RM) first\n";
 
           document.addEventListener('DOMContentLoaded', () => {
             const box = document.getElementById('liftInputBox');
@@ -2194,7 +2223,7 @@ Day 5
 
           <tr>
             <td>Leg Extension</td>
-            <td>135</td>
+            <td>125</td>
           </tr>
 
           <tr>
@@ -2214,7 +2243,7 @@ Day 5
 
           <tr>
             <td>Pulldown</td>
-            <td>185</td>
+            <td>180</td>
           </tr>
 
           <tr>
@@ -2234,7 +2263,7 @@ Day 5
 
           <tr>
             <td>Pullover</td>
-            <td>85</td>
+            <td>80</td>
           </tr>
 
           <tr>
@@ -2243,8 +2272,8 @@ Day 5
           </tr>
 
           <tr>
-            <td>Curl</td>
-            <td>60</td>
+            <td>Bicep Curl</td>
+            <td>65</td>
           </tr>
 
           <tr>
@@ -2254,7 +2283,7 @@ Day 5
 
           <tr>
             <td>Goblet Squat</td>
-            <td>70</td>
+            <td>60</td>
           </tr>
 
           <tr>
@@ -2269,7 +2298,7 @@ Day 5
 
           <tr>
             <td>Nuetral Machine Row</td>
-            <td>160</td>
+            <td>125</td>
           </tr>
 
           <tr>
