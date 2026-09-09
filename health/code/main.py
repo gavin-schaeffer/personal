@@ -19,7 +19,7 @@ from nutrition_calculation import (
 from weekly_program import user_program
 from exercises import EXERCISES
 from lifting_calculations.weight_lifting_program import evaluate_selected_program
-from lifting_calculations.program_matrix import attach_weekly_prescriptions
+from lifting_calculations.program_matrix import attach_weekly_prescriptions, normalize_training_goal
 
 
 def get_training_day_offsets(freq: int) -> List[int]:
@@ -124,7 +124,10 @@ def build_inputs_text_last_week(selected_program: List[List[Dict[str, Any]]]) ->
                 w = weeks[week_index]
                 reps = w.get("reps", "N/A")
                 weight = w.get("weight", "N/A")
-                lines.append(f"- {name} | 1RM: {one_rm} | try: {reps} reps @ {weight} lbs first")
+                pct = w.get("pct_1rm", None)
+                pct_text = f"{round(pct * 100)}% 1RM" if isinstance(pct, (int, float)) else "N/A"
+
+                lines.append(f"- {name} | 1RM: {one_rm} | try: {reps} reps @ {weight} lbs ({pct_text}) first")
             else:
                 lines.append(f"- {name} | 1RM: {one_rm} | try: (no data)")
 
@@ -553,44 +556,19 @@ def build_nutrition_goals_html(
     carbs,
     fat,
     fiber,
-    meal_frequency: int,
 ) -> str:
     """
-    Builds the Nutrition Goals section with three subgroups:
-    - My Macros
-    - Meal Targets
-    - Meal Portion Ideas
+    Builds the Nutrition Goals section with calories and macros only.
     """
-    _, meal_macro_plan = nutritional_facts.meal_table(
-        kcal,
-        proteins,
-        carbs,
-        fat,
-        fiber,
-        meal_frequency,
-    )
-
-    meal_kcal, meal_proteins, meal_carbs, meal_fat, meal_fiber = meal_macro_plan
-
-    meal_targets = {
-        "kcal": round(meal_kcal, 1),
-        "protein_g": round(meal_proteins, 1),
-        "carbs_g": round(meal_carbs, 1),
-        "fat_g": round(meal_fat, 1),
-        "fiber_g": round(meal_fiber, 1),
-    }
-
-    meal_ideas = build_meal_portion_ideas(meal_targets)
-
     html = """
   <section id="nutrition-goals">
     <details class="collapsible">
-      <summary class="summary-header">Nutrition Goals</summary>
+      <summary class="summary-header">Nutrition Guide</summary>
       <div class="collapse-body">
 
         <details class="week-collapsible" open>
           <summary class="week-summary" style="background-color:#3B3A30;">
-            My Macros
+            Calories and Macros
           </summary>
 
           <div class="week-section" style="--week-bg:#D9D2B6; --week-border:#3B3A30; background-color:var(--week-bg); border:8px solid var(--week-border);">
@@ -630,50 +608,18 @@ def build_nutrition_goals_html(
         else:
             html += f"                <td>{cell}</td>\n"
 
-    html += f"""
-              </tr>
-            </table>
-          </div>
-        </details>
-
-        <details class="week-collapsible" open>
-          <summary class="week-summary" style="background-color:#3E4E2F;">
-            Meal Targets
-          </summary>
-
-          <div class="week-section" style="--week-bg:#CAB48B; --week-border:#3E4E2F; background-color:var(--week-bg); border:8px solid var(--week-border);">
-            <table>
-              <tr>
-                <th>Meals Per Day</th>
-                <th>Calories Per Meal</th>
-                <th>Protein Per Meal</th>
-                <th>Carbs Per Meal</th>
-                <th>Fat Per Meal</th>
-                <th>Fiber Per Meal</th>
-              </tr>
-              <tr>
-                <td>{meal_frequency}</td>
-                <td>{round(meal_kcal, 1)}</td>
-                <td>{round(meal_proteins, 1)}</td>
-                <td>{round(meal_carbs, 1)}</td>
-                <td>{round(meal_fat, 1)}</td>
-                <td>{round(meal_fiber, 1)}</td>
-              </tr>
-            </table>
-          </div>
-        </details>
-"""
-
-    html += build_meal_ideas_html(meal_ideas)
-
     html += """
+              </tr>
+            </table>
+          </div>
+        </details>
+
       </div>
     </details>
   </section>
 """
 
     return html
-
 
 def main():
     now = datetime.now()
@@ -688,20 +634,34 @@ def main():
     age = int(input("Age: "))
     weight_input = int(input("Weight (lb): "))
     height_input = input("Height (ft,in): ")
-    body_fat_input = float(input("Approximate body fat percentage (just integers, no sign): "))
-    sleep_score_input = float(input("Approximate hours of Sleep per night? (ex. 7.5): "))
-    lifting_frequency_input = int(input("How many days a week do you lift weights? "))
-    training_age_input = int(input("How long have you been strength training in years? "))
-    cardio_frequency_input = int(input("How many days a week do you do cardio? "))
-    daily_step_activity_input = int(input("How many steps do you get approximately every day? "))
-    job_type_input = str(input("What type of Job do you have? Sedentary (desk job), Moderate(retail), Active (Contruction). "))
+    body_fat_input = float(
+        input("Approximate body fat percentage (just integers, no sign): "))
+    sleep_score_input = float(
+        input("Approximate hours of Sleep per night? (ex. 7.5): "))
+    lifting_frequency_input = int(
+        input("How many days a week do you lift weights? "))
+    training_age_input = int(
+        input("How long have you been strength training in years? "))
+    cardio_frequency_input = int(
+        input("How many days a week do you do cardio? "))
+    daily_step_activity_input = int(
+        input("How many steps do you get approximately every day? "))
+    job_type_input = str(
+        input(
+            "What type of Job do you have? Sedentary (desk job), Moderate(retail), Active (Contruction). "
+        ))
     rank_input = input("Easy, Advanced, or Injured (E, A, or I): ").lower()
+    lifting_goal_input = input(
+        "Lifting goal? Hypertrophy or Strength (H or S): ").lower()
+    training_goal = normalize_training_goal(lifting_goal_input)
+    training_goal_label = training_goal.title()
     nutrition_goal = input("lose, gain, or maintain? (L, G, or M): ").lower()
-    nutrition_goal_level = input("Goal rank? Agressive, or Moderate (A or M): ").lower()
-    meal_frequency_input = int(input("How many meals per day do you want? "))
+    nutrition_goal_level = input(
+        "Goal rank? Agressive, or Moderate (A or M): ").lower()
+    # meal_frequency_input = int(input("How many meals per day do you want? "))
 
-    if meal_frequency_input <= 0:
-        raise ValueError("Meal frequency must be greater than 0.")
+    # if meal_frequency_input <= 0:
+    #     raise ValueError("Meal frequency must be greater than 0.")
 
     # ================== Nutrition Info =========================
     weight = input_conversion.weight_kg_conversions(weight_input)
@@ -748,9 +708,10 @@ def main():
     )
 
     # ================== Lifting program =========================
-    selected = user_program(rank_input, lifting_frequency_input)
+    selected = user_program(rank_input, lifting_frequency_input, training_goal)
     evaluated_program, one_rms = evaluate_selected_program(selected, EXERCISES)
-    full_program = attach_weekly_prescriptions(evaluated_program)
+    full_program = attach_weekly_prescriptions(evaluated_program,
+                                               training_goal=training_goal)
     initial_inputs_text = build_inputs_text_last_week(full_program)
 
     num_weeks = infer_num_weeks(full_program)
@@ -763,7 +724,8 @@ def main():
         )
 
     last_day_offset = day_offsets[-1]
-    end_date = next_monday + timedelta(weeks=num_weeks - 1, days=last_day_offset)
+    end_date = next_monday + timedelta(weeks=num_weeks - 1,
+                                       days=last_day_offset)
 
     maxes_list = build_maxes_list(full_program)
 
@@ -966,6 +928,7 @@ def main():
                 <tr>
                   <th>Exercise</th>
                   <th>Weight (lbs)</th>
+                  <th>% 1RM</th>
                   <th>Sets</th>
                   <th>Reps</th>
                 </tr>
@@ -977,15 +940,18 @@ def main():
                 try:
                     week_block = ex["weeks"][week_index]
                     weight_val = week_block["weight"]
+                    pct_val = week_block["pct_1rm"]
+                    pct_display = f"{round(pct_val * 100)}%"
                     sets_val = week_block["sets"]
                     reps_val = week_block["reps"]
                 except (KeyError, IndexError):
-                    weight_val = sets_val = reps_val = "—"
+                    weight_val = pct_display = sets_val = reps_val = "—"
 
                 html_content += f"""
                 <tr>
                   <td>{name}</td>
                   <td>{weight_val}</td>
+                  <td>{pct_display}</td>
                   <td>{sets_val}</td>
                   <td>{reps_val}</td>
                 </tr>
@@ -1085,30 +1051,30 @@ def main():
           </tr>
 """
 
-#     html_content += """
-#         </table>
-#       </div>
-#     </details>
-#   </section>
-# """
 
-#     html_content += build_nutrition_goals_html(
-#         header=header,
-#         goal_label_matrix=goal_label_matrix,
-#         kcal=kcal,
-#         proteins=proteins,
-#         carbs=carbs,
-#         fat=fat,
-#         fiber=fiber,
-#         meal_frequency=meal_frequency_input,
-#     )
+    html_content += """
+        </table>
+      </div>
+    </details>
+  </section>
+"""
 
-#     html_content += """
-# </body>
-# </html>
-# """
+    html_content += build_nutrition_goals_html(
+        header=header,
+        goal_label_matrix=goal_label_matrix,
+        kcal=kcal,
+        proteins=proteins,
+        carbs=carbs,
+        fat=fat,
+        fiber=fiber,
+    )
 
-    # Write file
+    html_content += """
+</body>
+</html>
+"""
+
+# Write file
     output_path = "/home/u302264/personal/health/programs"
     os.makedirs(output_path, exist_ok=True)
 
