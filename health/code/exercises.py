@@ -1,7 +1,6 @@
 EXERCISES = {
     # ================== PUSH ===============================
     "close_grip_press": {"name": "Close-Grip Press", "role": "auxiliary", "ask_input": True},
-    "dips": {"name": "Dips", "role": "auxiliary", "ask_input": True},
     "flat_press": {"name": "Flat Press", "role": "main", "ask_input": True},
     "incline_press": {"name": "Incline Press", "role": "main", "ask_input": True},
     "lateral_raises": {"name": "Delt Raises", "role": "isolation", "ask_input": True},
@@ -24,7 +23,6 @@ EXERCISES = {
     "calf_raises": {"name": "Calf Raises", "role": "isolation", "ask_input": True},
     "deadlift": {"name": "Deadlift", "role": "main", "ask_input": True},
     "goblet_squat": {"name": "Goblet Squat", "role": "auxiliary", "ask_input": True},
-    "hip_thrust": {"name": "Hip Thrust", "role": "main", "ask_input": True},
     "hamstring_curl": {"name": "Hamstring Curl", "role": "isolation", "ask_input": True},
     "leg_extension": {"name": "Leg Extension", "role": "isolation", "ask_input": True},
     "leg_press": {"name": "Leg Press", "role": "main", "ask_input": True},

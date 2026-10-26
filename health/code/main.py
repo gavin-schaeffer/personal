@@ -3,6 +3,7 @@ import os
 import json
 import random
 from datetime import datetime, timedelta
+import colorsys
 
 from nutrition_calculation import (
     bmr,
@@ -12,11 +13,61 @@ from nutrition_calculation import (
     input_conversion,
     activity_factor,
 )
-from weekly_program import user_program
 from exercises import EXERCISES
 from lifting_calculations.weight_lifting_program import evaluate_selected_program
-from lifting_calculations.program_matrix import attach_weekly_prescriptions, normalize_training_goal
+from weekly_program import user_program, normalize_program_goal
+from lifting_calculations.program_matrix import attach_weekly_prescriptions
+from constants import ROLE_TO_PRESCRIPTION, REST_INTERVALS_SECONDS, TARGET_RIR_BY_GOAL
 
+
+
+def normalize_rank_for_program(rank_input: str) -> str:
+    rank_input = (rank_input or "").lower().strip()
+
+    if rank_input in ["a", "advanced"]:
+        return "advanced"
+
+    if rank_input in ["e", "easy"]:
+        return "easy"
+
+    if rank_input in ["i", "injured"]:
+        return "easy"
+
+    raise ValueError("rank_input must be one of: E/easy, A/advanced, or I/injured")
+
+
+def get_prescription_role(ex: Dict[str, Any]) -> str:
+    raw_role = (ex.get("role") or "").lower().strip()
+    return ROLE_TO_PRESCRIPTION.get(raw_role, "aux")
+
+
+def get_rest_display(ex: Dict[str, Any]) -> str:
+    prescription_role = get_prescription_role(ex)
+    seconds = REST_INTERVALS_SECONDS.get(prescription_role)
+
+    if not seconds:
+        return "-"
+
+    if seconds >= 120 and seconds % 60 == 0:
+        return f"{seconds // 60} min"
+
+    return f"{seconds} sec"
+
+
+def get_rir_display(ex: Dict[str, Any], training_goal: str, week_index: int) -> str:
+    prescription_role = get_prescription_role(ex)
+
+    rir_by_week = TARGET_RIR_BY_GOAL.get(training_goal, {}).get(prescription_role)
+
+    if not rir_by_week or week_index >= len(rir_by_week):
+        return "-"
+
+    rir = rir_by_week[week_index]
+
+    if rir == 0:
+        return "0-1"
+
+    return str(rir)
 
 def get_training_day_offsets(freq: int) -> List[int]:
     if freq == 5:
@@ -61,7 +112,10 @@ def build_maxes_list(selected_program: List[List[Dict[str, Any]]]) -> List[Tuple
     return out
 
 
-def build_inputs_text_last_week(selected_program: List[List[Dict[str, Any]]]) -> str:
+def build_inputs_text_last_week(
+    selected_program: List[List[Dict[str, Any]]],
+    training_goal: str = "hypertrophy",
+) -> str:
     lines: List[str] = []
     num_weeks = None
 
@@ -99,8 +153,14 @@ def build_inputs_text_last_week(selected_program: List[List[Dict[str, Any]]]) ->
                 weight = w.get("weight", "N/A")
                 pct = w.get("pct_1rm", None)
                 pct_text = f"{round(pct * 100)}% 1RM" if isinstance(pct, (int, float)) else "N/A"
+                sets = w.get("sets", "N/A")
+                rir_text = get_rir_display(ex, training_goal, week_index)
+                rest_text = get_rest_display(ex)
 
-                lines.append(f"- {name} | 1RM: {one_rm} | try: {reps} reps @ {weight} lbs ({pct_text}) first")
+                lines.append(
+                    f"- {name} | 1RM: {one_rm} | try: {sets} sets x {reps} reps "
+                    f"@ {weight} lbs ({pct_text}) | RIR: {rir_text} | Rest: {rest_text}"
+                )
             else:
                 lines.append(f"- {name} | 1RM: {one_rm} | try: (no data)")
 
@@ -175,36 +235,161 @@ def _blend_with_white(hex_color: str, amount: float = 0.35) -> str:
     return _rgb_to_hex(r, g, b)
 
 
-def _random_base_hex() -> str:
+def _hsl_to_hex(h: float, s: float, l: float) -> str:
+    """
+    h: 0-360
+    s: 0-1
+    l: 0-1
+    """
+    h = (h % 360) / 360
+    r, g, b = colorsys.hls_to_rgb(h, l, s)
+
     return _rgb_to_hex(
-        random.randint(40, 215),
-        random.randint(40, 215),
-        random.randint(40, 215),
+        int(r * 255),
+        int(g * 255),
+        int(b * 255),
     )
 
 
-def _random_soft_hex() -> str:
-    return _blend_with_white(_random_base_hex(), amount=random.uniform(0.35, 0.65))
+def _choose_complementary_hues() -> Tuple[float, float, str]:
+    """
+    Every generated scheme uses only:
+    - base hue
+    - exact complementary hue: base + 180 degrees
+
+    The names are only for readability/debugging.
+    """
+
+    complementary_pairs = [
+        # base_hue, complement_hue, label
+
+        # Cinematic blue/orange
+        (214, 34, "midnight_blue_burnt_orange"),
+
+        # Emerald/wine
+        (152, 332, "emerald_rosewood"),
+
+        # Royal purple/gold
+        (266, 86, "royal_purple_antique_gold"),
+
+        # Teal/coral
+        (184, 4, "deep_teal_coral"),
+
+        # Forest/magenta
+        (128, 308, "forest_green_magenta"),
+
+        # Navy/copper
+        (225, 45, "navy_copper"),
+
+        # Plum/chartreuse
+        (286, 106, "plum_chartreuse"),
+
+        # Ocean/rust
+        (198, 18, "ocean_blue_rust"),
+
+        # Indigo/amber
+        (244, 64, "indigo_amber"),
+
+        # Pine/cranberry
+        (140, 320, "pine_cranberry"),
+
+        # Slate/apricot
+        (205, 25, "slate_blue_apricot"),
+
+        # Aubergine/lime-gold
+        (275, 95, "aubergine_lime_gold"),
+    ]
+
+    base_hue, complement_hue, label = random.choice(complementary_pairs)
+
+    # Tiny rotation keeps repeat generations fresh while preserving exact opposition.
+    rotation = random.uniform(-8, 8)
+    base_hue = (base_hue + rotation) % 360
+    complement_hue = (base_hue + 180) % 360
+
+    return base_hue, complement_hue, label
+
+
+def _complementary_soft_color(base_hue: float, complement_hue: float, index: int) -> str:
+    """
+    Week colors alternate between the base hue family and complement hue family.
+    Only saturation/lightness vary.
+    """
+
+    hue = base_hue if index % 2 == 0 else complement_hue
+
+    # Subtle variation without leaving the complementary relationship.
+    saturation_options = [0.28, 0.32, 0.36, 0.40, 0.44]
+    lightness_options = [0.78, 0.81, 0.84, 0.87, 0.90]
+
+    saturation = saturation_options[index % len(saturation_options)]
+    lightness = lightness_options[(index * 2) % len(lightness_options)]
+
+    return _hsl_to_hex(hue, saturation, lightness)
 
 
 def generate_random_color_scheme(count: int = 12) -> Dict[str, Any]:
-    page_bg = _blend_with_white(_random_base_hex(), amount=0.78)
+    """
+    Complementary-only color scheme.
 
-    primary_bg = _darken_hex(_random_base_hex(), factor=random.uniform(0.45, 0.70))
-    secondary_bg = _darken_hex(_random_base_hex(), factor=random.uniform(0.45, 0.70))
-    accent_bg = _darken_hex(_random_base_hex(), factor=random.uniform(0.50, 0.75))
+    This uses exactly two hue families:
+    1. base hue
+    2. complementary hue = base + 180 degrees
 
-    week_colors = [_random_soft_hex() for _ in range(count)]
+    All colors are tints/shades of those two hues.
+    No analogous, triadic, or random RGB colors are introduced.
+    """
+
+    base_hue, complement_hue, palette_name = _choose_complementary_hues()
+
+    # Main dark colors
+    primary_bg = _hsl_to_hex(
+        base_hue,
+        random.uniform(0.42, 0.58),
+        random.uniform(0.22, 0.32),
+    )
+
+    secondary_bg = _hsl_to_hex(
+        complement_hue,
+        random.uniform(0.42, 0.58),
+        random.uniform(0.24, 0.34),
+    )
+
+    accent_bg = _hsl_to_hex(
+        complement_hue,
+        random.uniform(0.50, 0.68),
+        random.uniform(0.30, 0.42),
+    )
+
+    # Page background: very light tint of either the base or complement.
+    page_hue = base_hue if random.random() < 0.5 else complement_hue
+    page_bg = _hsl_to_hex(
+        page_hue,
+        random.uniform(0.22, 0.34),
+        random.uniform(0.90, 0.95),
+    )
+
+    # Week colors alternate between base and complement tints.
+    week_colors = [
+        _complementary_soft_color(base_hue, complement_hue, i)
+        for i in range(count)
+    ]
 
     return {
+        "palette_name": palette_name,
+
         "page_bg": page_bg,
         "body_text": "#2B2118",
+
         "primary_bg": primary_bg,
         "primary_text": _text_color_for_bg(primary_bg),
+
         "secondary_bg": secondary_bg,
         "secondary_text": _text_color_for_bg(secondary_bg),
+
         "accent_bg": accent_bg,
         "accent_text": _text_color_for_bg(accent_bg),
+
         "week_colors": week_colors,
     }
 
@@ -225,19 +410,27 @@ def build_nutrition_goals_html(
     carbs,
     fat,
     fiber,
+    color_scheme=None,
 ) -> str:
-    html = """
+    if color_scheme is None:
+        color_scheme = {}
+
+    nutrition_bg = color_scheme.get("week_colors", ["#D9D2B6"])[-1]
+    nutrition_border = color_scheme.get("secondary_bg", "#3B3A30")
+    nutrition_text = color_scheme.get("secondary_text", _text_color_for_bg(nutrition_border))
+
+    html = f"""
   <section id="nutrition-goals">
     <details class="collapsible">
       <summary class="summary-header">Nutrition Guide</summary>
       <div class="collapse-body">
 
         <details class="week-collapsible" open>
-          <summary class="week-summary" style="background-color:#3B3A30;">
+          <summary class="week-summary" style="background-color:{nutrition_border}; color:{nutrition_text};">
             Calories and Macros
           </summary>
 
-          <div class="week-section" style="--week-bg:#D9D2B6; --week-border:#3B3A30; background-color:var(--week-bg); border:8px solid var(--week-border);">
+          <div class="week-section" style="--week-bg:{nutrition_bg}; --week-border:{nutrition_border}; background-color:var(--week-bg); border:8px solid var(--week-border);">
             <div class="table-scroll">
               <table>
                 <tr>
@@ -291,7 +484,6 @@ def build_nutrition_goals_html(
 
     return html
 
-
 def main():
     now = datetime.now()
     today = now.date()
@@ -311,9 +503,10 @@ def main():
     cardio_frequency_input = int(input("How many days a week do you do cardio? "))
     daily_step_activity_input = int(input("How many steps do you get approximately every day? "))
     job_type_input = str(input("What type of Job do you have? Sedentary (desk job), Moderate(retail), Active (Construction). "))
-    rank_input = input("Easy, Advanced, or Injured (E, A, or I): ").lower()
-    lifting_goal_input = input("Lifting goal? Hypertrophy or Strength (H or S): ").lower()
-    training_goal = normalize_training_goal(lifting_goal_input)
+    rank_input_raw = input("Easy, Advanced, or Injured (E, A, or I): ").lower()
+    rank_input = normalize_rank_for_program(rank_input_raw)
+    lifting_goal_input = input("Lifting goal? Hypertrophy, Strength, or Balanced (H, S, or B): ").lower()
+    training_goal = normalize_program_goal(lifting_goal_input)
     training_goal_label = training_goal.title()
     nutrition_goal = input("lose, gain, or maintain? (L, G, or M): ").lower()
     nutrition_goal_level = input("Goal rank? Aggressive, or Moderate (A or M): ").lower()
@@ -369,7 +562,7 @@ def main():
         training_goal=training_goal,
     )
 
-    initial_inputs_text = build_inputs_text_last_week(full_program)
+    initial_inputs_text = build_inputs_text_last_week(full_program, training_goal)
 
     num_weeks = infer_num_weeks(full_program)
     day_offsets = get_training_day_offsets(lifting_frequency_input)
@@ -496,34 +689,45 @@ def main():
     }}
 
     .lift-table {{
-      min-width: 315px;
+      min-width: 520px;
     }}
 
     .lift-table th:nth-child(1),
     .lift-table td:nth-child(1) {{
-      width: 38%;
+      width: 32%;
       text-align: left;
     }}
 
     .lift-table th:nth-child(2),
     .lift-table td:nth-child(2) {{
-      width: 17%;
+      width: 14%;
     }}
 
     .lift-table th:nth-child(3),
     .lift-table td:nth-child(3) {{
-      width: 12%;
+      width: 9%;
     }}
 
     .lift-table th:nth-child(4),
     .lift-table td:nth-child(4) {{
-      width: 12%;
+      width: 9%;
     }}
 
     .lift-table th:nth-child(5),
     .lift-table td:nth-child(5) {{
-      width: 21%;
+      width: 12%;
     }}
+
+    .lift-table th:nth-child(6),
+    .lift-table td:nth-child(6) {{
+      width: 9%;
+    }}
+
+    .lift-table th:nth-child(7),
+    .lift-table td:nth-child(7) {{
+      width: 15%;
+    }}
+
 
     .week-section {{
       padding: 12px;
@@ -678,6 +882,9 @@ def main():
 <body>
   <div class="page-shell">
     <h1>The "{training_goal_label}" Program</h1>
+  <p style="text-align:center;margin-top:-12px;font-size:13px;opacity:0.75;">
+    Color harmony: {color_scheme.get("palette_name", "complementary")}
+  </p>
 
     <div class="button-row">
       <button id="expandAllBtn" type="button">Expand all</button>
@@ -736,7 +943,10 @@ def main():
                       <th>Sets</th>
                       <th>Reps</th>
                       <th>% 1RM</th>
+                      <th>RIR</th>
+                      <th>Rest</th>
                     </tr>
+
 """
 
             for ex in day:
@@ -749,8 +959,10 @@ def main():
                     reps_val = week_block["reps"]
                     pct_val = week_block["pct_1rm"]
                     pct_display = f"{round(pct_val * 100)}%"
+                    rir_display = get_rir_display(ex, training_goal, week_index)
+                    rest_display = get_rest_display(ex)
                 except (KeyError, IndexError):
-                    weight_val = sets_val = reps_val = pct_display = "-"
+                    weight_val = sets_val = reps_val = pct_display = rir_display = rest_display = "-"
 
                 html_content += f"""
                     <tr>
@@ -759,6 +971,8 @@ def main():
                       <td>{sets_val}</td>
                       <td>{reps_val}</td>
                       <td>{pct_display}</td>
+                      <td>{rir_display}</td>
+                      <td>{rest_display}</td>
                     </tr>
 """
 
@@ -867,14 +1081,16 @@ def main():
 """
 
     html_content += build_nutrition_goals_html(
-        header=header,
-        goal_label_matrix=goal_label_matrix,
-        kcal=kcal,
-        proteins=proteins,
-        carbs=carbs,
-        fat=fat,
-        fiber=fiber,
-    )
+      header=header,
+      goal_label_matrix=goal_label_matrix,
+      kcal=kcal,
+      proteins=proteins,
+      carbs=carbs,
+      fat=fat,
+      fiber=fiber,
+      color_scheme=color_scheme,
+  )
+
 
     html_content += """
   </div>
@@ -882,7 +1098,7 @@ def main():
 </html>
 """
 
-    output_path = "/home/u302264/personal/health/programs"
+    output_path = "/Users/gavin.schaeffer/Documents/GitHub/personal/health/programs/"
     os.makedirs(output_path, exist_ok=True)
 
     output_file = f"{name_input}_health_program_{next_monday.strftime('%Y-%m-%d')}_{end_date.strftime('%Y-%m-%d')}.html"
